@@ -24,6 +24,18 @@ public class User {
         this.email = email;
     }
 
+    // Create a new User with basic info
+    public User(Integer id, String username, String password, String role) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.firstname = "";
+        this.lastname = "";
+        this.dob = "";
+        this.role = role;
+        this.email = "";
+    }
+
     public Integer getId() {
         return id;
     }

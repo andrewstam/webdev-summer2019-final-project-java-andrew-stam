@@ -21,13 +21,13 @@ public class UserController {
     List<User> userArrayList = new ArrayList<User>(Arrays.asList(users));
 
     // Find all users stored
-    @GetMapping("/users")
+    @GetMapping("/api/users")
     public User[] findAllUsers() {
         return users;
     }
 
     // Delete a User by their ID
-    @DeleteMapping("/users/{userId}")
+    @DeleteMapping("/api/users/{userId}")
     public List<User> deleteUser(@PathVariable("userId") int userId) {
         User u = null;
         for (User user : userArrayList) {
@@ -40,10 +40,18 @@ public class UserController {
     }
 
     // Update all users
-    @PostMapping("/users")
+    @PostMapping("/api/users")
     public List<User> updateUsers(@RequestBody User[] allUsers) {
         users = allUsers;
         userArrayList = new ArrayList<User> (Arrays.asList(users));
         return userArrayList;
+    }
+
+    // Create a new user
+    @PutMapping("/api/users")
+    public void createUser(@RequestBody String[] credentials) {
+        // Just have id, user/pass, and role
+        User create = new User(Integer.parseInt(credentials[0]), credentials[1], credentials[2], credentials[3]);
+        userArrayList.add(create);
     }
 }
