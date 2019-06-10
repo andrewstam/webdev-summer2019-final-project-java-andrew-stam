@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*")
 public class UserController {
     // Test Data of Users
     private User[] users = {
