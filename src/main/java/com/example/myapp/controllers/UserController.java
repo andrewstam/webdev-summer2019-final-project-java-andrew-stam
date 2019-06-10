@@ -18,7 +18,7 @@ public class UserController {
     };
 
     // Store the users as a List of Users
-    List<User> userArrayList = new ArrayList<User>(Arrays.asList(users));
+    private List<User> userArrayList = new ArrayList<User>(Arrays.asList(users));
 
     // Find all users stored
     @GetMapping("/api/users")
@@ -51,7 +51,22 @@ public class UserController {
     @PutMapping("/api/users")
     public void createUser(@RequestBody String[] credentials) {
         // Just have id, user/pass, and role
-        User create = new User(Integer.parseInt(credentials[0]), credentials[1], credentials[2], credentials[3]);
+        User create = new User(Long.parseLong(credentials[0]), credentials[1], credentials[2], credentials[3]);
         userArrayList.add(create);
+    }
+
+    // Validate a login
+    @PutMapping("/api/validate")
+    public boolean validateUser(@RequestBody String[] credentials) {
+        // Just have id, user/pass, and role
+        for (User u : userArrayList) {
+            // Username match
+            if (u.getUsername().equals(credentials[0])) {
+                // Validate password
+                return u.getPassword().equals(credentials[1]);
+            }
+        }
+        // Found no match, invalid credentials
+        return false;
     }
 }
