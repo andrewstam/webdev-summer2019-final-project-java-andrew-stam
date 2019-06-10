@@ -12,9 +12,9 @@ import java.util.List;
 public class UserController {
     // Test Data of Users
     private User[] users = {
-            new User(1, "andrew", "stam", "Andrew", "Stam", "22 October 1980", "GroupLeader", "example@example.com"),
-            new User(1, "bob123", "pass", "Bob", "Smith", "25 February 1995", "GroupMember", "example1@example.com"),
-            new User(1, "mymember", "mypass", "Member", "LastName", "31 July 2001", "GroupMember", "example2@example.com")
+            new User(1L, "andrew", "stam", "Andrew", "Stam", "22 October 1980", "GroupLeader", "example@example.com"),
+            new User(2L, "bob123", "pass", "Bob", "Smith", "25 February 1995", "GroupMember", "example1@example.com"),
+            new User(3L, "mymember", "mypass", "Member", "LastName", "31 July 2001", "GroupMember", "example2@example.com")
     };
 
     // Store the users as a List of Users
