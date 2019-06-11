@@ -18,6 +18,8 @@ public class UserController {
             new User(3L, "mymember", "mypass", "Member", "LastName", "31 July 2001", "GroupMember", "example2@example.com")
     };
 
+    private User invalid = new User(null, null, null, null);
+
     // Store the users as a List of Users
     private List<User> userArrayList = new ArrayList<User>(Arrays.asList(users));
 
@@ -57,17 +59,17 @@ public class UserController {
     }
 
     // Validate a login
-    @PutMapping("/api/validate")
-    public boolean validateUser(@RequestBody String[] credentials) {
+    @PostMapping("/api/validate")
+    public User validateUser(@RequestBody String[] credentials) {
         // Just have id, user/pass, and role
         for (User u : userArrayList) {
             // Username match
             if (u.getUsername().equals(credentials[0])) {
                 // Validate password
-                return u.getPassword().equals(credentials[1]);
+                return u.getPassword().equals(credentials[1]) ? u : invalid;
             }
         }
         // Found no match, invalid credentials
-        return false;
+        return invalid;
     }
 }
