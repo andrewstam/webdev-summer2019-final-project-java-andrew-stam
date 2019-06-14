@@ -1,8 +1,6 @@
 // Created by Andrew Stam
 package com.example.myapp.models;
 
-import com.example.myapp.models.RoleType;
-
 public class User {
     private Long id;
     private String username;
@@ -36,6 +34,18 @@ public class User {
         this.dob = "";
         this.role = role;
         this.email = "";
+    }
+
+    // Create a new basic User, used for POST requests
+    public User() {
+        this.id = null;
+        this.username = null;
+        this.password = null;
+        this.firstname = null;
+        this.lastname = null;
+        this.dob = null;
+        this.role = null;
+        this.email = null;
     }
 
     public Long getId() {

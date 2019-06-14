@@ -19,10 +19,7 @@ public class UserController {
             new User(3L, "mymember", "mypass", "Member", "LastName", "31 July 2001", RoleType.GroupLeader, "example2@example.com")
     };
 
-    private User invalid = new User(null, null, null, null);
-
-    // Store the users as a List of Users
-    private List<User> userArrayList = new ArrayList<User>(Arrays.asList(users));
+    private User invalid = new User(null, null, null, RoleType.GroupMember);
 
     // Find all users stored
     @GetMapping("/api/users")
@@ -32,43 +29,64 @@ public class UserController {
 
     // Delete a User by their ID
     @DeleteMapping("/api/users/{userId}")
-    public List<User> deleteUser(@PathVariable("userId") int userId) {
+    public User[] deleteUser(@PathVariable("userId") int userId) {
         User u = null;
-        for (User user : userArrayList) {
+        for (int i = 0; i < users.length; i++) {
+            User user = users[i];
             if (user.getId() == userId) {
                 u = user;
             }
         }
-        userArrayList.remove(u);
-        return userArrayList;
+        ArrayList<User> temp = new ArrayList<User>(Arrays.asList(users));
+        temp.remove(u);
+        User[] newList = new User[temp.size()];
+        for (int i = 0; i < temp.size(); i++) {
+            newList[i] = temp.get(i);
+        }
+        users = newList;
+        return newList;
     }
 
     // Update all users
     @PostMapping("/api/users")
-    public List<User> updateUsers(@RequestBody User[] allUsers) {
+    public User[] updateUsers(@RequestBody User[] allUsers) {
         users = allUsers;
-        userArrayList = new ArrayList<User> (Arrays.asList(users));
-        return userArrayList;
+        return users;
     }
 
-    // Create a new user
+    // Create a new user, return if success
     @PutMapping("/api/users")
-    public void createUser(@RequestBody String[] credentials) {
+    public boolean createUser(@RequestBody String[] credentials) {
         // Convert string to enum
-        RoleType role = RoleType.GroupLeader;
-        if (credentials[3].equals(RoleType.GroupMember.toString())) {
-            role = RoleType.GroupMember;
+        RoleType role = RoleType.GroupMember;
+        if (credentials[3].equals(RoleType.GroupLeader.toString())) {
+            role = RoleType.GroupLeader;
+        }
+        // If this is a taken username, reject
+        for (int i = 0; i < users.length; i++) {
+            User u = users[i];
+            if (u.getUsername().equals(credentials[1])) {
+                return false;
+            }
         }
         // Just have id, user/pass, and role
         User create = new User(Long.parseLong(credentials[0]), credentials[1], credentials[2], role);
-        userArrayList.add(create);
+        ArrayList<User> temp = new ArrayList<User>(Arrays.asList(users));
+        temp.add(create);
+        User[] newList = new User[temp.size()];
+        for (int i = 0; i < temp.size(); i++) {
+            newList[i] = temp.get(i);
+        }
+        users = newList;
+        return true;
     }
 
     // Validate a login
     @PostMapping("/api/validate")
     public User validateUser(@RequestBody String[] credentials) {
         // Just have id, user/pass, and role
-        for (User u : userArrayList) {
+        for (int i = 0; i < users.length; i++) {
+            User u = users[i];
             // Username match
             if (u.getUsername().equals(credentials[0])) {
                 // Validate password
