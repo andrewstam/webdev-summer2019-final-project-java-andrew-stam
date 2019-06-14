@@ -54,8 +54,13 @@ public class UserController {
     // Create a new user
     @PutMapping("/api/users")
     public void createUser(@RequestBody String[] credentials) {
+        // Convert string to enum
+        RoleType role = RoleType.GroupLeader;
+        if (credentials[3].equals(RoleType.GroupMember.toString())) {
+            role = RoleType.GroupMember;
+        }
         // Just have id, user/pass, and role
-        User create = new User(Long.parseLong(credentials[0]), credentials[1], credentials[2], credentials[3]);
+        User create = new User(Long.parseLong(credentials[0]), credentials[1], credentials[2], role);
         userArrayList.add(create);
     }
 
