@@ -5,9 +5,9 @@ import com.example.myapp.models.User;
 import com.example.myapp.models.RoleType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -83,17 +83,29 @@ public class UserController {
 
     // Validate a login
     @PostMapping("/api/validate")
-    public User validateUser(@RequestBody String[] credentials) {
+    public User validateUser(@RequestBody String[] credentials, HttpSession session) {
         // Just have id, user/pass, and role
         for (int i = 0; i < users.length; i++) {
             User u = users[i];
             // Username match
             if (u.getUsername().equals(credentials[0])) {
                 // Validate password
-                return u.getPassword().equals(credentials[1]) ? u : invalid;
+                if (u.getPassword().equals(credentials[1])) {
+                    // Set a cookie for logged in user
+                    session.setAttribute("userId", u.getId());
+                    return u;
+                } else {
+                    return invalid;
+                }
             }
         }
         // Found no match, invalid credentials
         return invalid;
+    }
+
+    // Retrieve session attribute
+    @GetMapping("/api/session/get/{attr}")
+    public String getSessionAttr(@PathVariable("attr") String attr, HttpSession session) {
+        return (String) session.getAttribute(attr);
     }
 }
