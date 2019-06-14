@@ -1,6 +1,8 @@
 // Created by Andrew Stam
 package com.example.myapp.models;
 
+import com.example.myapp.models.RoleType;
+
 public class User {
     private Long id;
     private String username;
@@ -9,11 +11,11 @@ public class User {
     private String lastname;
     private String dob;
     // Either GroupLeader or GroupMember
-    private String role;
+    private RoleType role;
     private String email;
 
     // Create a new User
-    public User(Long id, String username, String password, String firstname, String lastname, String dob, String role, String email) {
+    public User(Long id, String username, String password, String firstname, String lastname, String dob, RoleType role, String email) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -25,7 +27,7 @@ public class User {
     }
 
     // Create a new User with basic info
-    public User(Long id, String username, String password, String role) {
+    public User(Long id, String username, String password, RoleType role) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -84,11 +86,11 @@ public class User {
         this.dob = dob;
     }
 
-    public String getRole() {
+    public RoleType getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(RoleType role) {
         this.role = role;
     }
 
