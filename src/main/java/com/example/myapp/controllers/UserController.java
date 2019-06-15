@@ -27,6 +27,18 @@ public class UserController {
         return users;
     }
 
+    // Find user by ID
+    @GetMapping("/api/users/{uid}")
+    public User findUserById(@PathVariable("uid") Long id) {
+        for (User u : users) {
+            if (u.getId().equals(id)) {
+                return u;
+            }
+        }
+        // Didn't find
+        return null;
+    }
+
     // Delete a User by their ID
     @DeleteMapping("/api/users/{userId}")
     public User[] deleteUser(@PathVariable("userId") int userId) {
