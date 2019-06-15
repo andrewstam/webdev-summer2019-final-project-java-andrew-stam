@@ -32,6 +32,19 @@ public class UserController {
         return ret;
     }
 
+    // Find newest user (largest ID)
+    @GetMapping("/api/users/new")
+    public User findNewestUser() {
+        User newest = users[0];
+        for (User u : users) {
+            if (u.getId() > newest.getId()) {
+                newest = u;
+            }
+        }
+        // Block password from being sent
+        return newest.safeCopy();
+    }
+
     // Find user by ID
     @GetMapping("/api/users/{uid}")
     public User findUserById(@PathVariable("uid") Long id) {
