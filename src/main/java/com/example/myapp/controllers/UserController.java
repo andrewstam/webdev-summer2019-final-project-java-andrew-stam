@@ -56,7 +56,7 @@ public class UserController {
 
     // Create a new user, return if success
     @PutMapping("/api/users")
-    public boolean createUser(@RequestBody String[] credentials) {
+    public boolean createUser(@RequestBody String[] credentials, HttpSession session) {
         // Convert string to enum
         RoleType role = RoleType.GroupMember;
         if (credentials[3].equals(RoleType.GroupLeader.toString())) {
@@ -78,6 +78,7 @@ public class UserController {
             newList[i] = temp.get(i);
         }
         users = newList;
+        session.setAttribute("userId", create.getId());
         return true;
     }
 
@@ -105,6 +106,7 @@ public class UserController {
 
     // Retrieve session attribute
     @GetMapping("/api/session/get/{attr}")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     public String getSessionAttr(@PathVariable("attr") String attr, HttpSession session) {
         return (String) session.getAttribute(attr);
     }
