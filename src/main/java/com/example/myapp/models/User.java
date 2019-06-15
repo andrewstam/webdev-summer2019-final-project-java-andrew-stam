@@ -48,6 +48,11 @@ public class User {
         this.email = null;
     }
 
+    // Return a copy of this object with password hidden for security
+    public User safeCopy() {
+        return new User(id, username, "HIDDEN", firstname, lastname, dob, role, email);
+    }
+
     public Long getId() {
         return id;
     }

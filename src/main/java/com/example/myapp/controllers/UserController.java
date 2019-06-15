@@ -24,7 +24,12 @@ public class UserController {
     // Find all users stored
     @GetMapping("/api/users")
     public User[] findAllUsers() {
-        return users;
+        // Block all passwords from being sent
+        User[] ret = new User[users.length];
+        for (int i = 0; i < ret.length; i++) {
+            ret[i] = users[i].safeCopy();
+        }
+        return ret;
     }
 
     // Find user by ID
@@ -32,7 +37,8 @@ public class UserController {
     public User findUserById(@PathVariable("uid") Long id) {
         for (User u : users) {
             if (u.getId().equals(id)) {
-                return u;
+                // Don't send password
+                return u.safeCopy();
             }
         }
         // Didn't find
@@ -53,7 +59,8 @@ public class UserController {
         temp.remove(u);
         User[] newList = new User[temp.size()];
         for (int i = 0; i < temp.size(); i++) {
-            newList[i] = temp.get(i);
+            // Don't send passwords
+            newList[i] = temp.get(i).safeCopy();
         }
         users = newList;
         return newList;
@@ -62,19 +69,26 @@ public class UserController {
     // Update all users
     @PostMapping("/api/users")
     public User[] updateUsers(@RequestBody User[] allUsers) {
-        users = allUsers;
-        return users;
+        // Block all passwords
+        User[] ret = new User[users.length];
+        for (int i = 0; i < ret.length; i++) {
+            ret[i] = users[i].safeCopy();
+        }
+        return ret;
     }
 
-    // Update given user, return updated user
+    // Update given user, return updated user - password never sent or modified
     @PostMapping("/api/users/{uid}")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public User updateUser(@PathVariable("uid") Long id, @RequestBody User update) {
         for (int i = 0; i < users.length; i++) {
             User u = users[i];
             if (u.getId().equals(id)) {
+                // Password stays on backend, untouched
+                update.setPassword(u.getPassword());
                 users[i] = update;
-                return update;
+                // Don't send password to frontend
+                return update.safeCopy();
             }
         }
         // Didn't update
@@ -113,15 +127,15 @@ public class UserController {
     @PostMapping("/api/validate")
     public User validateUser(@RequestBody String[] credentials, HttpSession session) {
         // Just have id, user/pass, and role
-        for (int i = 0; i < users.length; i++) {
-            User u = users[i];
+        for (User u : users) {
             // Username match
             if (u.getUsername().equals(credentials[0])) {
                 // Validate password
                 if (u.getPassword().equals(credentials[1])) {
                     // Set a cookie for logged in user
                     session.setAttribute("userId", u.getId());
-                    return u;
+                    // Return a copy of the user, password field removed for security
+                    return u.safeCopy();
                 } else {
                     return invalid;
                 }
