@@ -32,13 +32,25 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     // Use JPA to find a user's following by their id, return that list
     @Query(value = "select user.following from User user where id=:id")
-    public User[] findUserFollowing(@Param("id") Long id);
+    public List<User> findUserFollowing(@Param("id") Long id);
 
     // Use JPA to find a user's followers by their id, return that list
     @Query(value = "select user.followers from User user where id=:id")
-    public User[] findUserFollowers(@Param("id") Long id);
+    public List<User> findUserFollowers(@Param("id") Long id);
 
     // Use JPA to find a user's favorites by their id, return that list
     @Query(value = "select user.favorites from User user where id=:id")
-    public Movie[] findUserFavorites(@Param("id") Long id);
+    public List<Movie> findUserFavorites(@Param("id") Long id);
+
+    // Use JPA to add to a user's following by their id, the user to follow's id, and the array index
+    @Query(value = "insert into user_following (user_id, following_id, following_idx) values (:uid, :fid, :idx)", nativeQuery = true)
+    public void addUserFollowing(@Param("uid") Long uid, @Param("fid") Long fid, @Param("idx") int idx);
+
+    // Use JPA to add to a user's followers by their id, the user to be following's id, and the array index
+    @Query(value = "insert into user_followers (user_id, follower_id, follower_idx) values (:uid, :fid, :idx)", nativeQuery = true)
+    public void addUserFollower(@Param("uid") Long uid, @Param("fid") Long fid, @Param("idx") int idx);
+
+    // Use JPA to add to a user's favorites by their id, the favorite ID, and the array index
+    @Query(value = "insert into user_favorites (user_id, favorite_id, favorite_idx) values (:uid, :fid, :idx)", nativeQuery = true)
+    public void addUserFavorite(@Param("uid") Long uid, @Param("fid") String fid, @Param("idx") int idx);
 }

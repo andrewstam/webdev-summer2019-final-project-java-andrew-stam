@@ -4,31 +4,32 @@ package com.example.myapp.controllers;
 import com.example.myapp.models.Movie;
 import com.example.myapp.models.User;
 import com.example.myapp.models.RoleType;
+import com.example.myapp.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
 public class UserController {
-    // Test Data of Users
-    private User[] users = {
-            new User(1L, "andrew", "stam", "Andrew", "Stam", "1980-10-22", RoleType.GroupLeader, "example@example.com", new User[0], new User[0], new Movie[0]),
-            new User(2L, "bob123", "pass", "Bob", "Smith", "1995-02-25", RoleType.GroupMember, "example1@example.com", new User[0], new User[0], new Movie[0]),
-            new User(3L, "mymember", "mypass", "Member", "LastName", "2001-07-31", RoleType.GroupLeader, "example2@example.com", new User[0], new User[0], new Movie[0])
-    };
-
+    // An invalid User
     private User invalid = new User(null, null, null, RoleType.GroupMember);
+
+    // Get data from the database
+    @Autowired
+    private UserRepository repository;
 
     // Find all users stored
     @GetMapping("/api/users")
-    public User[] findAllUsers() {
+    public List<User> findAllUsers() {
         // Block all passwords from being sent
-        User[] ret = new User[users.length];
-        for (int i = 0; i < ret.length; i++) {
-            ret[i] = users[i].safeCopy();
+        List<User> ret = new ArrayList<>();
+        System.out.println("SIZE :: " + repository.findAllUsers().size());
+        for (User u : repository.findAllUsers()) {
+            ret.add(u.safeCopy());
         }
         return ret;
     }
@@ -36,8 +37,9 @@ public class UserController {
     // Find newest user (largest ID)
     @GetMapping("/api/users/new")
     public User findNewestUser() {
-        User newest = users[0];
-        for (User u : users) {
+        List<User> list = repository.findAllUsers();
+        User newest = list.get(0);
+        for (User u : list) {
             if (u.getId() > newest.getId()) {
                 newest = u;
             }
@@ -49,192 +51,86 @@ public class UserController {
     // Find user by ID
     @GetMapping("/api/users/{uid}")
     public User findUserById(@PathVariable("uid") Long id) {
-        for (User u : users) {
-            if (u.getId().equals(id)) {
-                // Don't send password
-                return u.safeCopy();
-            }
-        }
-        // Didn't find
-        return invalid;
+        return repository.findUserById(id).safeCopy();
     }
 
     // Find a user's followers by the user's ID
     @GetMapping("/api/users/{uid}/followers")
-    public User[] findFollowers(@PathVariable("uid") Long id) {
-        for (User u : users) {
-            if (u.getId().equals(id)) {
-                // Don't send passwords
-                User[] followers = new User[u.getFollowers().length];
-                for (int i = 0; i < followers.length; i++) {
-                    followers[i] = u.getFollowers()[i].safeCopy();
-                }
-                return followers;
-            }
+    public List<User> findFollowers(@PathVariable("uid") Long id) {
+        // Block all passwords from being sent
+        List<User> ret = new ArrayList<>();
+        for (User u : repository.findUserFollowers(id)) {
+            ret.add(u.safeCopy());
         }
-        // Didn't find
-        return null;
+        return ret;
     }
 
-    // Add to a user's followers list by the user's ID, return the new list
+    // Add to a user's followers list by the user's ID
     @PostMapping("/api/users/{uid}/followers")
-    public User[] addFollower(@PathVariable("uid") Long id, @RequestBody Long addId) {
-        for (User u : users) {
-            if (u.getId().equals(id)) {
-                // Don't send passwords
-                User[] followers = new User[u.getFollowers().length + 1];
-                for (int i = 0; i < u.getFollowers().length; i++) {
-                    followers[i] = u.getFollowers()[i].safeCopy();
-                }
-                for (User a : users) {
-                    if (a.getId().equals(addId)) {
-                        ArrayList<User> checkContains = new ArrayList<>(Arrays.asList(u.getFollowers()));
-                        if (checkContains.contains(a)) {
-                            // Already in list, ignored
-                            return Arrays.copyOfRange(followers, 0, followers.length - 1);
-                        }
-                        // Add new follower
-                        followers[followers.length - 1] = a;
-                        u.setFollowers(followers);
-                        return followers;
-                    }
-                }
-            }
-        }
-        // Didn't find
-        return null;
+    public void addFollower(@PathVariable("uid") Long id, @RequestBody Long addId) {
+        int size = repository.findUserFollowers(id).size();
+        // Add to end of the list
+        repository.addUserFollower(id, addId, size);
     }
 
     // Find a user's following by the user's ID
     @GetMapping("/api/users/{uid}/following")
-    public User[] findFollowing(@PathVariable("uid") Long id) {
-        for (User u : users) {
-            if (u.getId().equals(id)) {
-                // Don't send passwords
-                User[] following = new User[u.getFollowing().length];
-                for (int i = 0; i < following.length; i++) {
-                    following[i] = u.getFollowing()[i].safeCopy();
-                }
-                return following;
-            }
+    public List<User> findFollowing(@PathVariable("uid") Long id) {
+        // Block all passwords from being sent
+        List<User> ret = new ArrayList<>();
+        for (User u : repository.findUserFollowing(id)) {
+            ret.add(u.safeCopy());
         }
-        // Didn't find
-        return null;
+        return ret;
     }
 
     // Add to a user's following list by the user's ID, return the new list
     @PostMapping("/api/users/{uid}/following")
-    public User[] addFollowing(@PathVariable("uid") Long id, @RequestBody Long addId) {
-        for (User u : users) {
-            if (u.getId().equals(id)) {
-                // Don't send passwords
-                User[] following = new User[u.getFollowing().length + 1];
-                for (int i = 0; i < u.getFollowing().length; i++) {
-                    following[i] = u.getFollowing()[i].safeCopy();
-                }
-                for (User a : users) {
-                    if (a.getId().equals(addId)) {
-                        ArrayList<User> checkContains = new ArrayList<>(Arrays.asList(u.getFollowing()));
-                        if (checkContains.contains(a)) {
-                            // Already in list, ignored
-                            return Arrays.copyOfRange(following, 0, following.length - 1);
-                        }
-                        // Add new following user
-                        following[following.length - 1] = a;
-                        u.setFollowing(following);
-                        return following;
-                    }
-                }
-            }
-        }
-        // Didn't find
-        return null;
+    public void addFollowing(@PathVariable("uid") Long id, @RequestBody Long addId) {
+        int size = repository.findUserFollowing(id).size();
+        // Add to end of the list
+        repository.addUserFollowing(id, addId, size);
     }
 
     // Find a user's favorites list by the user's ID
     @GetMapping("/api/users/{uid}/favorites")
-    public Movie[] findFavorites(@PathVariable("uid") Long id) {
-        for (User u : users) {
-            if (u.getId().equals(id)) {
-                return u.getFavorites();
-            }
-        }
-        // Didn't find
-        return null;
+    public List<Movie> findFavorites(@PathVariable("uid") Long id) {
+        return repository.findUserFavorites(id);
     }
 
     // Add to a user's favorites list by the user's ID, return the new list
     @PostMapping("/api/users/{uid}/favorites")
-    public Movie[] addFavorite(@PathVariable("uid") Long id, @RequestBody Movie fav) {
-        for (User u : users) {
-            if (u.getId().equals(id)) {
-                // Copy original list
-                Movie[] favs = new Movie[u.getFavorites().length + 1];
-                for (int i = 0; i < u.getFavorites().length; i++) {
-                    favs[i] = u.getFavorites()[i];
-                }
-                ArrayList<Movie> checkContains = new ArrayList<>(Arrays.asList(u.getFavorites()));
-                if (checkContains.contains(fav)) {
-                    // Already in list, ignored
-                    return Arrays.copyOfRange(favs, 0, favs.length - 1);
-                }
-                // Add new favorite ID
-                favs[favs.length - 1] = fav;
-                u.setFavorites(favs);
-                return favs;
-            }
-        }
-        // Didn't find
-        return null;
+    public void addFavorite(@PathVariable("uid") Long id, @RequestBody Movie fav) {
+        int size = repository.findUserFavorites(id).size();
+        // Add to end of the list
+        repository.addUserFavorite(id, fav.getId(), size);
     }
 
     // Delete a User by their ID
     @DeleteMapping("/api/users/{userId}")
-    public User[] deleteUser(@PathVariable("userId") int userId) {
-        User u = null;
-        for (User user : users) {
-            if (user.getId() == userId) {
-                u = user;
-            }
-        }
-        ArrayList<User> temp = new ArrayList<User>(Arrays.asList(users));
-        temp.remove(u);
-        User[] newList = new User[temp.size()];
-        for (int i = 0; i < temp.size(); i++) {
-            // Don't send passwords
-            newList[i] = temp.get(i).safeCopy();
-        }
-        users = newList;
-        return newList;
+    public void deleteUser(@PathVariable("userId") Long userId) {
+        repository.deleteById(userId);
     }
 
     // Update all users
     @PostMapping("/api/users")
-    public User[] updateUsers(@RequestBody User[] allUsers) {
-        // Block all passwords
-        User[] ret = new User[users.length];
-        for (int i = 0; i < ret.length; i++) {
-            ret[i] = users[i].safeCopy();
+    public void updateUsers(@RequestBody List<User> allUsers) {
+        // Reset database to only have the given users
+        for (User u : repository.findAllUsers()) {
+            repository.deleteById(u.getId());
         }
-        return ret;
+        for (User u : allUsers) {
+            repository.save(u);
+        }
     }
 
     // Update given user, return updated user - password never sent or modified
     @PostMapping("/api/users/{uid}")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public User updateUser(@PathVariable("uid") Long id, @RequestBody User update) {
-        for (int i = 0; i < users.length; i++) {
-            User u = users[i];
-            if (u.getId().equals(id)) {
-                // Password stays on backend, untouched
-                update.setPassword(u.getPassword());
-                users[i] = update;
-                // Don't send password to frontend
-                return update.safeCopy();
-            }
-        }
-        // Didn't update
-        return null;
+        User u = repository.findUserById(id);
+        u.set(update);
+        return repository.save(u);
     }
 
     // Create a new user, return if success
@@ -246,44 +142,31 @@ public class UserController {
             role = RoleType.GroupLeader;
         }
         // If this is a taken username, reject
-        for (User u : users) {
+        for (User u : repository.findAllUsers()) {
             if (u.getUsername().equals(credentials[1])) {
                 return false;
             }
         }
         // Just have id, user/pass, and role
         User create = new User(Long.parseLong(credentials[0]), credentials[1], credentials[2], role);
-        ArrayList<User> temp = new ArrayList<User>(Arrays.asList(users));
-        temp.add(create);
-        User[] newList = new User[temp.size()];
-        for (int i = 0; i < temp.size(); i++) {
-            newList[i] = temp.get(i);
-        }
-        users = newList;
-        session.setAttribute("userId", create.getId());
+        repository.save(create);
         return true;
     }
 
     // Validate a login
     @PostMapping("/api/validate")
     public User validateUser(@RequestBody String[] credentials, HttpSession session) {
-        // Just have id, user/pass, and role
-        for (User u : users) {
-            // Username match
-            if (u.getUsername().equals(credentials[0])) {
-                // Validate password
-                if (u.getPassword().equals(credentials[1])) {
-                    // Set a cookie for logged in user
-                    session.setAttribute("userId", u.getId());
-                    // Return a copy of the user, password field removed for security
-                    return u.safeCopy();
-                } else {
-                    return invalid;
-                }
-            }
+        User validate = repository.findUserByUsername(credentials[0]);
+        // Validate password
+        if (validate != null && validate.getPassword().equals(credentials[1])) {
+            // Set a cookie for logged in user
+            session.setAttribute("userId", validate.getId());
+            // Return a copy of the user, password field removed for security
+            return validate.safeCopy();
+        } else {
+            // Found no match, invalid credentials
+            return invalid;
         }
-        // Found no match, invalid credentials
-        return invalid;
     }
 
     // Retrieve session attribute

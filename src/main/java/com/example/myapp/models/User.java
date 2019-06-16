@@ -80,6 +80,21 @@ public class User {
         this.favorites = new Movie[0];
     }
 
+    // Set all fields of this object to that of the given object (excluding password)
+    public void set(User copy) {
+        this.id = copy.getId();
+        this.username = copy.getUsername();
+        //this.password = copy.getPassword();   password is never sent to frontend, so don't overwrite
+        this.firstname = copy.getFirstname();
+        this.lastname = copy.getLastname();
+        this.dob = copy.getDob();
+        this.role = copy.getRole();
+        this.email = copy.getEmail();
+        this.following = copy.getFollowing();
+        this.followers = copy.getFollowers();
+        this.favorites = copy.getFavorites();
+    }
+
     // Return a copy of this object with password hidden for security
     public User safeCopy() {
         return new User(id, username, "HIDDEN", firstname, lastname, dob, role, email, following, followers, favorites);
