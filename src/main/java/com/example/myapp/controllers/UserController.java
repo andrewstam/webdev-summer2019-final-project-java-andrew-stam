@@ -14,9 +14,9 @@ import java.util.Arrays;
 public class UserController {
     // Test Data of Users
     private User[] users = {
-            new User(1L, "andrew", "stam", "Andrew", "Stam", "1980-10-22", RoleType.GroupLeader, "example@example.com", null, null, null),
-            new User(2L, "bob123", "pass", "Bob", "Smith", "1995-02-25", RoleType.GroupMember, "example1@example.com", null, null, null),
-            new User(3L, "mymember", "mypass", "Member", "LastName", "2001-07-31", RoleType.GroupLeader, "example2@example.com", null, null, null)
+            new User(1L, "andrew", "stam", "Andrew", "Stam", "1980-10-22", RoleType.GroupLeader, "example@example.com", new User[0], new User[0], new String[0]),
+            new User(2L, "bob123", "pass", "Bob", "Smith", "1995-02-25", RoleType.GroupMember, "example1@example.com", new User[0], new User[0], new String[0]),
+            new User(3L, "mymember", "mypass", "Member", "LastName", "2001-07-31", RoleType.GroupLeader, "example2@example.com", new User[0], new User[0], new String[0])
     };
 
     private User invalid = new User(null, null, null, RoleType.GroupMember);
