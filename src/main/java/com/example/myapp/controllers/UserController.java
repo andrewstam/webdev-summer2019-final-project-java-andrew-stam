@@ -1,6 +1,7 @@
 // Created by Andrew Stam
 package com.example.myapp.controllers;
 
+import com.example.myapp.models.Movie;
 import com.example.myapp.models.User;
 import com.example.myapp.models.RoleType;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +15,9 @@ import java.util.Arrays;
 public class UserController {
     // Test Data of Users
     private User[] users = {
-            new User(1L, "andrew", "stam", "Andrew", "Stam", "1980-10-22", RoleType.GroupLeader, "example@example.com", new User[0], new User[0], new String[0]),
-            new User(2L, "bob123", "pass", "Bob", "Smith", "1995-02-25", RoleType.GroupMember, "example1@example.com", new User[0], new User[0], new String[0]),
-            new User(3L, "mymember", "mypass", "Member", "LastName", "2001-07-31", RoleType.GroupLeader, "example2@example.com", new User[0], new User[0], new String[0])
+            new User(1L, "andrew", "stam", "Andrew", "Stam", "1980-10-22", RoleType.GroupLeader, "example@example.com", new User[0], new User[0], new Movie[0]),
+            new User(2L, "bob123", "pass", "Bob", "Smith", "1995-02-25", RoleType.GroupMember, "example1@example.com", new User[0], new User[0], new Movie[0]),
+            new User(3L, "mymember", "mypass", "Member", "LastName", "2001-07-31", RoleType.GroupLeader, "example2@example.com", new User[0], new User[0], new Movie[0])
     };
 
     private User invalid = new User(null, null, null, RoleType.GroupMember);
@@ -152,7 +153,7 @@ public class UserController {
 
     // Find a user's favorites list by the user's ID
     @GetMapping("/api/users/{uid}/favorites")
-    public String[] findFavorites(@PathVariable("uid") Long id) {
+    public Movie[] findFavorites(@PathVariable("uid") Long id) {
         for (User u : users) {
             if (u.getId().equals(id)) {
                 return u.getFavorites();
@@ -164,15 +165,15 @@ public class UserController {
 
     // Add to a user's favorites list by the user's ID, return the new list
     @PostMapping("/api/users/{uid}/favorites")
-    public String[] addFavorite(@PathVariable("uid") Long id, @RequestBody String fav) {
+    public Movie[] addFavorite(@PathVariable("uid") Long id, @RequestBody Movie fav) {
         for (User u : users) {
             if (u.getId().equals(id)) {
                 // Copy original list
-                String[] favs = new String[u.getFavorites().length + 1];
+                Movie[] favs = new Movie[u.getFavorites().length + 1];
                 for (int i = 0; i < u.getFavorites().length; i++) {
                     favs[i] = u.getFavorites()[i];
                 }
-                ArrayList<String> checkContains = new ArrayList<>(Arrays.asList(u.getFavorites()));
+                ArrayList<Movie> checkContains = new ArrayList<>(Arrays.asList(u.getFavorites()));
                 if (checkContains.contains(fav)) {
                     // Already in list, ignored
                     return Arrays.copyOfRange(favs, 0, favs.length - 1);

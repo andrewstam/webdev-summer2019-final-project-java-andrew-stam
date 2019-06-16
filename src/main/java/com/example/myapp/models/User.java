@@ -30,7 +30,7 @@ public class User {
     private User[] followers;
 
     @JsonIgnore
-    @ManyToMany
+    @OneToMany
     @OrderColumn(name = "favorites_idx")
     private Movie[] favorites;
 
@@ -165,11 +165,11 @@ public class User {
         this.followers = followers;
     }
 
-    public Movie[] getMovies() {
+    public Movie[] getFavorites() {
         return favorites;
     }
 
-    public void setMovies(Movie[] favorites) {
+    public void setFavorites(Movie[] favorites) {
         this.favorites = favorites;
     }
 }

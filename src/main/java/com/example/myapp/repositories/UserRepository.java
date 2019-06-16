@@ -7,6 +7,7 @@ package com.example.myapp.repositories;
 
 import java.util.List;
 
+import com.example.myapp.models.Movie;
 import com.example.myapp.models.User;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -38,6 +39,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
     public User[] findUserFollowers(@Param("id") Long id);
 
     // Use JPA to find a user's favorites by their id, return that list
-    @Query(value = "select user.favoriteIds from User user where id=:id")
-    public User[] findUserFavorites(@Param("id") Long id);
+    @Query(value = "select user.favorites from User user where id=:id")
+    public Movie[] findUserFavorites(@Param("id") Long id);
 }
