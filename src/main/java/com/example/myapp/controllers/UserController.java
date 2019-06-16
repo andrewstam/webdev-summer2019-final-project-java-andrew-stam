@@ -82,7 +82,7 @@ public class UserController {
             if (u.getId().equals(id)) {
                 // Don't send passwords
                 User[] followers = new User[u.getFollowers().length + 1];
-                for (int i = 0; i < followers.length; i++) {
+                for (int i = 0; i < u.getFollowers().length; i++) {
                     followers[i] = u.getFollowers()[i].safeCopy();
                 }
                 for (User a : users) {
@@ -128,7 +128,7 @@ public class UserController {
             if (u.getId().equals(id)) {
                 // Don't send passwords
                 User[] following = new User[u.getFollowing().length + 1];
-                for (int i = 0; i < following.length; i++) {
+                for (int i = 0; i < u.getFollowing().length; i++) {
                     following[i] = u.getFollowing()[i].safeCopy();
                 }
                 for (User a : users) {

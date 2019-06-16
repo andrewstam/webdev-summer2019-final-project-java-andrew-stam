@@ -1,7 +1,14 @@
 // Created by Andrew Stam
 package com.example.myapp.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
+
+@Entity
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
     private String password;
@@ -12,7 +19,9 @@ public class User {
     private RoleType role;
     private String email;
 
+    @JsonIgnore
     private User[] following;
+    @JsonIgnore
     private User[] followers;
     private String[] favoriteIds;
 
