@@ -155,7 +155,7 @@ public class UserController {
     public String[] findFavorites(@PathVariable("uid") Long id) {
         for (User u : users) {
             if (u.getId().equals(id)) {
-                return u.getFavoriteIds();
+                return u.getFavorites();
             }
         }
         // Didn't find
@@ -168,18 +168,18 @@ public class UserController {
         for (User u : users) {
             if (u.getId().equals(id)) {
                 // Copy original list
-                String[] favs = new String[u.getFavoriteIds().length + 1];
-                for (int i = 0; i < u.getFavoriteIds().length; i++) {
-                    favs[i] = u.getFavoriteIds()[i];
+                String[] favs = new String[u.getFavorites().length + 1];
+                for (int i = 0; i < u.getFavorites().length; i++) {
+                    favs[i] = u.getFavorites()[i];
                 }
-                ArrayList<String> checkContains = new ArrayList<>(Arrays.asList(u.getFavoriteIds()));
+                ArrayList<String> checkContains = new ArrayList<>(Arrays.asList(u.getFavorites()));
                 if (checkContains.contains(fav)) {
                     // Already in list, ignored
                     return Arrays.copyOfRange(favs, 0, favs.length - 1);
                 }
                 // Add new favorite ID
                 favs[favs.length - 1] = fav;
-                u.setFavoriteIds(favs);
+                u.setFavorites(favs);
                 return favs;
             }
         }

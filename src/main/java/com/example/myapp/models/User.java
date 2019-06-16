@@ -20,14 +20,23 @@ public class User {
     private String email;
 
     @JsonIgnore
+    @ManyToMany
+    @OrderColumn(name = "following_idx")
     private User[] following;
+
     @JsonIgnore
+    @ManyToMany
+    @OrderColumn(name = "followers_idx")
     private User[] followers;
-    private String[] favoriteIds;
+
+    @JsonIgnore
+    @ManyToMany
+    @OrderColumn(name = "favorites_idx")
+    private Movie[] favorites;
 
     // Create a new User with the given attributes
     public User(Long id, String username, String password, String firstname, String lastname,
-                String dob, RoleType role, String email, User[] following, User[] followers, String[] favoriteIds) {
+                String dob, RoleType role, String email, User[] following, User[] followers, Movie[] favorites) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -38,7 +47,7 @@ public class User {
         this.email = email;
         this.following = following;
         this.followers = followers;
-        this.favoriteIds = favoriteIds;
+        this.favorites = favorites;
     }
 
     // Create a new User with basic info
@@ -53,7 +62,7 @@ public class User {
         this.email = "";
         this.following = new User[0];
         this.followers = new User[0];
-        this.favoriteIds = new String[0];
+        this.favorites = new Movie[0];
     }
 
     // Create a new basic User, used for POST requests
@@ -68,12 +77,12 @@ public class User {
         this.email = null;
         this.following = new User[0];
         this.followers = new User[0];
-        this.favoriteIds = new String[0];
+        this.favorites = new Movie[0];
     }
 
     // Return a copy of this object with password hidden for security
     public User safeCopy() {
-        return new User(id, username, "HIDDEN", firstname, lastname, dob, role, email, following, followers, favoriteIds);
+        return new User(id, username, "HIDDEN", firstname, lastname, dob, role, email, following, followers, favorites);
     }
 
     public Long getId() {
@@ -156,11 +165,11 @@ public class User {
         this.followers = followers;
     }
 
-    public String[] getFavoriteIds() {
-        return favoriteIds;
+    public Movie[] getMovies() {
+        return favorites;
     }
 
-    public void setFavoriteIds(String[] favoriteIds) {
-        this.favoriteIds = favoriteIds;
+    public void setMovies(Movie[] favorites) {
+        this.favorites = favorites;
     }
 }
