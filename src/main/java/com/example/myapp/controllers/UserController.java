@@ -75,6 +75,26 @@ public class UserController {
         return null;
     }
 
+    // Add to a user's followers list by the user's ID, return the new list
+    @PostMapping("/api/users/{uid}/followers")
+    public User[] addFollower(@PathVariable("uid") Long id, @RequestBody User add) {
+        for (User u : users) {
+            if (u.getId().equals(id)) {
+                // Don't send passwords
+                User[] followers = new User[u.getFollowers().length + 1];
+                for (int i = 0; i < followers.length; i++) {
+                    followers[i] = u.getFollowers()[i].safeCopy();
+                }
+                // Add new follower
+                followers[followers.length - 1] = add;
+                u.setFollowers(followers);
+                return followers;
+            }
+        }
+        // Didn't find
+        return null;
+    }
+
     // Find a user's following by the user's ID
     @GetMapping("/api/users/{uid}/following")
     public User[] findFollowing(@PathVariable("uid") Long id) {
@@ -85,6 +105,26 @@ public class UserController {
                 for (int i = 0; i < following.length; i++) {
                     following[i] = u.getFollowing()[i].safeCopy();
                 }
+                return following;
+            }
+        }
+        // Didn't find
+        return null;
+    }
+
+    // Add to a user's following list by the user's ID, return the new list
+    @PostMapping("/api/users/{uid}/following")
+    public User[] addFollowing(@PathVariable("uid") Long id, @RequestBody User add) {
+        for (User u : users) {
+            if (u.getId().equals(id)) {
+                // Don't send passwords
+                User[] following = new User[u.getFollowing().length + 1];
+                for (int i = 0; i < following.length; i++) {
+                    following[i] = u.getFollowing()[i].safeCopy();
+                }
+                // Add new following user
+                following[following.length - 1] = add;
+                u.setFollowing(following);
                 return following;
             }
         }
@@ -104,12 +144,31 @@ public class UserController {
         return null;
     }
 
+    // Add to a user's favorites list by the user's ID, return the new list
+    @PostMapping("/api/users/{uid}/favorites")
+    public String[] addFavorite(@PathVariable("uid") Long id, @RequestBody String fav) {
+        for (User u : users) {
+            if (u.getId().equals(id)) {
+                // Copy original list
+                String[] favs = new String[u.getFavoriteIds().length + 1];
+                for (int i = 0; i < u.getFavoriteIds().length; i++) {
+                    favs[i] = u.getFavoriteIds()[i];
+                }
+                // Add new favorite ID
+                favs[favs.length - 1] = fav;
+                u.setFavoriteIds(favs);
+                return favs;
+            }
+        }
+        // Didn't find
+        return null;
+    }
+
     // Delete a User by their ID
     @DeleteMapping("/api/users/{userId}")
     public User[] deleteUser(@PathVariable("userId") int userId) {
         User u = null;
-        for (int i = 0; i < users.length; i++) {
-            User user = users[i];
+        for (User user : users) {
             if (user.getId() == userId) {
                 u = user;
             }
