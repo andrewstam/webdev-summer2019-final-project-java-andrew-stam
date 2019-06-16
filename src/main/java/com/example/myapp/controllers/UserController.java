@@ -77,7 +77,7 @@ public class UserController {
 
     // Add to a user's followers list by the user's ID, return the new list
     @PostMapping("/api/users/{uid}/followers")
-    public User[] addFollower(@PathVariable("uid") Long id, @RequestBody User add) {
+    public User[] addFollower(@PathVariable("uid") Long id, @RequestBody Long addId) {
         for (User u : users) {
             if (u.getId().equals(id)) {
                 // Don't send passwords
@@ -85,10 +85,19 @@ public class UserController {
                 for (int i = 0; i < followers.length; i++) {
                     followers[i] = u.getFollowers()[i].safeCopy();
                 }
-                // Add new follower
-                followers[followers.length - 1] = add;
-                u.setFollowers(followers);
-                return followers;
+                for (User a : users) {
+                    if (a.getId().equals(addId)) {
+                        ArrayList<User> checkContains = new ArrayList<>(Arrays.asList(u.getFollowers()));
+                        if (checkContains.contains(a)) {
+                            // Already in list, ignored
+                            return Arrays.copyOfRange(followers, 0, followers.length - 1);
+                        }
+                        // Add new follower
+                        followers[followers.length - 1] = a;
+                        u.setFollowers(followers);
+                        return followers;
+                    }
+                }
             }
         }
         // Didn't find
@@ -114,7 +123,7 @@ public class UserController {
 
     // Add to a user's following list by the user's ID, return the new list
     @PostMapping("/api/users/{uid}/following")
-    public User[] addFollowing(@PathVariable("uid") Long id, @RequestBody User add) {
+    public User[] addFollowing(@PathVariable("uid") Long id, @RequestBody Long addId) {
         for (User u : users) {
             if (u.getId().equals(id)) {
                 // Don't send passwords
@@ -122,10 +131,19 @@ public class UserController {
                 for (int i = 0; i < following.length; i++) {
                     following[i] = u.getFollowing()[i].safeCopy();
                 }
-                // Add new following user
-                following[following.length - 1] = add;
-                u.setFollowing(following);
-                return following;
+                for (User a : users) {
+                    if (a.getId().equals(addId)) {
+                        ArrayList<User> checkContains = new ArrayList<>(Arrays.asList(u.getFollowing()));
+                        if (checkContains.contains(a)) {
+                            // Already in list, ignored
+                            return Arrays.copyOfRange(following, 0, following.length - 1);
+                        }
+                        // Add new following user
+                        following[following.length - 1] = a;
+                        u.setFollowing(following);
+                        return following;
+                    }
+                }
             }
         }
         // Didn't find
@@ -153,6 +171,11 @@ public class UserController {
                 String[] favs = new String[u.getFavoriteIds().length + 1];
                 for (int i = 0; i < u.getFavoriteIds().length; i++) {
                     favs[i] = u.getFavoriteIds()[i];
+                }
+                ArrayList<String> checkContains = new ArrayList<>(Arrays.asList(u.getFavoriteIds()));
+                if (checkContains.contains(fav)) {
+                    // Already in list, ignored
+                    return Arrays.copyOfRange(favs, 0, favs.length - 1);
                 }
                 // Add new favorite ID
                 favs[favs.length - 1] = fav;
