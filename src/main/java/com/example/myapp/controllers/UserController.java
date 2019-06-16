@@ -14,9 +14,9 @@ import java.util.Arrays;
 public class UserController {
     // Test Data of Users
     private User[] users = {
-            new User(1L, "andrew", "stam", "Andrew", "Stam", "1980-10-22", RoleType.GroupLeader, "example@example.com"),
-            new User(2L, "bob123", "pass", "Bob", "Smith", "1995-02-25", RoleType.GroupMember, "example1@example.com"),
-            new User(3L, "mymember", "mypass", "Member", "LastName", "2001-07-31", RoleType.GroupLeader, "example2@example.com")
+            new User(1L, "andrew", "stam", "Andrew", "Stam", "1980-10-22", RoleType.GroupLeader, "example@example.com", null, null, null),
+            new User(2L, "bob123", "pass", "Bob", "Smith", "1995-02-25", RoleType.GroupMember, "example1@example.com", null, null, null),
+            new User(3L, "mymember", "mypass", "Member", "LastName", "2001-07-31", RoleType.GroupLeader, "example2@example.com", null, null, null)
     };
 
     private User invalid = new User(null, null, null, RoleType.GroupMember);
@@ -56,6 +56,52 @@ public class UserController {
         }
         // Didn't find
         return invalid;
+    }
+
+    // Find a user's followers by the user's ID
+    @GetMapping("/api/users/{uid}/followers")
+    public User[] findFollowers(@PathVariable("uid") Long id) {
+        for (User u : users) {
+            if (u.getId().equals(id)) {
+                // Don't send passwords
+                User[] followers = new User[u.getFollowers().length];
+                for (int i = 0; i < followers.length; i++) {
+                    followers[i] = u.getFollowers()[i].safeCopy();
+                }
+                return followers;
+            }
+        }
+        // Didn't find
+        return null;
+    }
+
+    // Find a user's following by the user's ID
+    @GetMapping("/api/users/{uid}/following")
+    public User[] findFollowing(@PathVariable("uid") Long id) {
+        for (User u : users) {
+            if (u.getId().equals(id)) {
+                // Don't send passwords
+                User[] following = new User[u.getFollowing().length];
+                for (int i = 0; i < following.length; i++) {
+                    following[i] = u.getFollowing()[i].safeCopy();
+                }
+                return following;
+            }
+        }
+        // Didn't find
+        return null;
+    }
+
+    // Find a user's favorites list by the user's ID
+    @GetMapping("/api/users/{uid}/favorites")
+    public String[] findFavorites(@PathVariable("uid") Long id) {
+        for (User u : users) {
+            if (u.getId().equals(id)) {
+                return u.getFavoriteIds();
+            }
+        }
+        // Didn't find
+        return null;
     }
 
     // Delete a User by their ID
@@ -117,8 +163,7 @@ public class UserController {
             role = RoleType.GroupLeader;
         }
         // If this is a taken username, reject
-        for (int i = 0; i < users.length; i++) {
-            User u = users[i];
+        for (User u : users) {
             if (u.getUsername().equals(credentials[1])) {
                 return false;
             }

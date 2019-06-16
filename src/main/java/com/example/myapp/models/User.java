@@ -12,8 +12,13 @@ public class User {
     private RoleType role;
     private String email;
 
-    // Create a new User
-    public User(Long id, String username, String password, String firstname, String lastname, String dob, RoleType role, String email) {
+    private User[] following;
+    private User[] followers;
+    private String[] favoriteIds;
+
+    // Create a new User with the given attributes
+    public User(Long id, String username, String password, String firstname, String lastname,
+                String dob, RoleType role, String email, User[] following, User[] followers, String[] favoriteIds) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -22,6 +27,9 @@ public class User {
         this.dob = dob;
         this.role = role;
         this.email = email;
+        this.following = following;
+        this.followers = followers;
+        this.favoriteIds = favoriteIds;
     }
 
     // Create a new User with basic info
@@ -34,6 +42,9 @@ public class User {
         this.dob = "";
         this.role = role;
         this.email = "";
+        this.following = new User[0];
+        this.followers = new User[0];
+        this.favoriteIds = new String[0];
     }
 
     // Create a new basic User, used for POST requests
@@ -46,11 +57,14 @@ public class User {
         this.dob = null;
         this.role = null;
         this.email = null;
+        this.following = new User[0];
+        this.followers = new User[0];
+        this.favoriteIds = new String[0];
     }
 
     // Return a copy of this object with password hidden for security
     public User safeCopy() {
-        return new User(id, username, "HIDDEN", firstname, lastname, dob, role, email);
+        return new User(id, username, "HIDDEN", firstname, lastname, dob, role, email, following, followers, favoriteIds);
     }
 
     public Long getId() {
@@ -115,5 +129,29 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public User[] getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(User[] following) {
+        this.following = following;
+    }
+
+    public User[] getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(User[] followers) {
+        this.followers = followers;
+    }
+
+    public String[] getFavoriteIds() {
+        return favoriteIds;
+    }
+
+    public void setFavoriteIds(String[] favoriteIds) {
+        this.favoriteIds = favoriteIds;
     }
 }
