@@ -4,6 +4,8 @@ package com.example.myapp.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class User {
@@ -22,21 +24,21 @@ public class User {
     @JsonIgnore
     @ManyToMany
     @OrderColumn(name = "following_idx")
-    private User[] following;
+    private List<User> following;
 
     @JsonIgnore
     @ManyToMany
     @OrderColumn(name = "followers_idx")
-    private User[] followers;
+    private List<User> followers;
 
     @JsonIgnore
     @OneToMany
     @OrderColumn(name = "favorites_idx")
-    private Movie[] favorites;
+    private List<Movie> favorites;
 
     // Create a new User with the given attributes
     public User(Long id, String username, String password, String firstname, String lastname,
-                String dob, RoleType role, String email, User[] following, User[] followers, Movie[] favorites) {
+                String dob, RoleType role, String email, List<User> following, List<User> followers, List<Movie> favorites) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -60,9 +62,9 @@ public class User {
         this.dob = "";
         this.role = role;
         this.email = "";
-        this.following = new User[0];
-        this.followers = new User[0];
-        this.favorites = new Movie[0];
+        this.following = new ArrayList<User>();
+        this.followers = new ArrayList<User>();
+        this.favorites = new ArrayList<Movie>();
     }
 
     // Create a new basic User, used for POST requests
@@ -75,9 +77,9 @@ public class User {
         this.dob = null;
         this.role = null;
         this.email = null;
-        this.following = new User[0];
-        this.followers = new User[0];
-        this.favorites = new Movie[0];
+        this.following = new ArrayList<User>();
+        this.followers = new ArrayList<User>();
+        this.favorites = new ArrayList<Movie>();
     }
 
     // Set all fields of this object to that of the given object (excluding password)
@@ -164,27 +166,27 @@ public class User {
         this.email = email;
     }
 
-    public User[] getFollowing() {
+    public List<User> getFollowing() {
         return following;
     }
 
-    public void setFollowing(User[] following) {
+    public void setFollowing(List<User> following) {
         this.following = following;
     }
 
-    public User[] getFollowers() {
+    public List<User> getFollowers() {
         return followers;
     }
 
-    public void setFollowers(User[] followers) {
+    public void setFollowers(List<User> followers) {
         this.followers = followers;
     }
 
-    public Movie[] getFavorites() {
+    public List<Movie> getFavorites() {
         return favorites;
     }
 
-    public void setFavorites(Movie[] favorites) {
+    public void setFavorites(List<Movie> favorites) {
         this.favorites = favorites;
     }
 }
