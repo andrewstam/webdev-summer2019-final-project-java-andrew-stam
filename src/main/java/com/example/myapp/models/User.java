@@ -34,8 +34,6 @@ public class User {
 
     @JsonIgnore
     @ElementCollection
-    @OrderColumn(name = "favorites_idx")
-    @JoinColumn(name = "favorites")
     private List<String> favorites;
 
     // Create a new User with the given attributes

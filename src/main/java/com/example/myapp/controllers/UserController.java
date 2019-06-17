@@ -97,10 +97,9 @@ public class UserController {
         return repository.findUserFavorites(id);
     }
 
-    // Add to a user's favorites list by the user's ID, return the new list
+    // Add to a user's favorites list by the user's ID
     @PostMapping("/api/users/{uid}/favorites")
     public void addFavorite(@PathVariable("uid") Long id, @RequestBody String fav) {
-        int size = repository.findUserFavorites(id).size();
         // Add to end of the list, never need double quotes
         if (fav.contains("\"")) {
             // Will always be at beginning and end
@@ -110,7 +109,13 @@ public class UserController {
         if (repository.findUserFavorites(id).contains(fav)) {
             return;
         }
-        repository.addUserFavorite(id, fav, size);
+        repository.addUserFavorite(id, fav);
+    }
+
+    // Remove from a user's favorites list by the user's ID and the given favorite
+    @DeleteMapping("/api/users/{uid}/favorites")
+    public void removeFavorite(@PathVariable("uid") Long id, @RequestBody String fav) {
+        repository.removeUserFavorite(id, fav);
     }
 
     // Delete a User by their ID

@@ -58,6 +58,12 @@ public interface UserRepository extends CrudRepository<User, Long> {
     // Use JPA to add to a user's favorites by their id, the favorite ID, and the array index
     @Modifying
     @Transactional
-    @Query(value = "insert into user_favorites (user_id, favorites_idx, favorites) values (:uid, :idx, :fid)", nativeQuery = true)
-    public void addUserFavorite(@Param("uid") Long uid, @Param("fid") String fid, @Param("idx") int idx);
+    @Query(value = "insert into user_favorites (user_id, favorites) values (:uid, :fid)", nativeQuery = true)
+    public void addUserFavorite(@Param("uid") Long uid, @Param("fid") String fid);
+
+    // Use JPA to remove from a user's favorites by their id, the favorite ID
+    @Modifying
+    @Transactional
+    @Query(value = "delete from user_favorites where user_id=:uid and favorites=:fid", nativeQuery = true)
+    public void removeUserFavorite(@Param("uid") Long uid, @Param("fid") String fid);
 }
