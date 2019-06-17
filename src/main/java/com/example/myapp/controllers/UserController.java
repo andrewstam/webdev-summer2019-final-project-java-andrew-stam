@@ -1,7 +1,6 @@
 // Created by Andrew Stam
 package com.example.myapp.controllers;
 
-import com.example.myapp.models.Movie;
 import com.example.myapp.models.User;
 import com.example.myapp.models.RoleType;
 import com.example.myapp.repositories.UserRepository;
@@ -94,16 +93,16 @@ public class UserController {
 
     // Find a user's favorites list by the user's ID
     @GetMapping("/api/users/{uid}/favorites")
-    public List<Movie> findFavorites(@PathVariable("uid") Long id) {
+    public List<String> findFavorites(@PathVariable("uid") Long id) {
         return repository.findUserFavorites(id);
     }
 
     // Add to a user's favorites list by the user's ID, return the new list
     @PostMapping("/api/users/{uid}/favorites")
-    public void addFavorite(@PathVariable("uid") Long id, @RequestBody Movie fav) {
+    public void addFavorite(@PathVariable("uid") Long id, @RequestBody String fav) {
         int size = repository.findUserFavorites(id).size();
         // Add to end of the list
-        repository.addUserFavorite(id, fav.getId(), size);
+        repository.addUserFavorite(id, fav, size);
     }
 
     // Delete a User by their ID

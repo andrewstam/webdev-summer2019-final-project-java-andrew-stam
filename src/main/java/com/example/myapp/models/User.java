@@ -32,13 +32,13 @@ public class User {
     private List<User> followers;
 
     @JsonIgnore
-    @OneToMany
+    @ElementCollection
     @OrderColumn(name = "favorites_idx")
-    private List<Movie> favorites;
+    private List<String> favorites;
 
     // Create a new User with the given attributes
     public User(Long id, String username, String password, String firstname, String lastname,
-                String dob, RoleType role, String email, List<User> following, List<User> followers, List<Movie> favorites) {
+                String dob, RoleType role, String email, List<User> following, List<User> followers, List<String> favorites) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -64,7 +64,7 @@ public class User {
         this.email = "";
         this.following = new ArrayList<User>();
         this.followers = new ArrayList<User>();
-        this.favorites = new ArrayList<Movie>();
+        this.favorites = new ArrayList<String>();
     }
 
     // Create a new basic User, used for POST requests
@@ -79,7 +79,7 @@ public class User {
         this.email = null;
         this.following = new ArrayList<User>();
         this.followers = new ArrayList<User>();
-        this.favorites = new ArrayList<Movie>();
+        this.favorites = new ArrayList<String>();
     }
 
     // Set all fields of this object to that of the given object (excluding password)
@@ -182,11 +182,11 @@ public class User {
         this.followers = followers;
     }
 
-    public List<Movie> getFavorites() {
+    public List<String> getFavorites() {
         return favorites;
     }
 
-    public void setFavorites(List<Movie> favorites) {
+    public void setFavorites(List<String> favorites) {
         this.favorites = favorites;
     }
 }
