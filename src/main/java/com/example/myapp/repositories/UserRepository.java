@@ -46,10 +46,10 @@ public interface UserRepository extends CrudRepository<User, Long> {
     public void addUserFollowing(@Param("uid") Long uid, @Param("fid") Long fid, @Param("idx") int idx);
 
     // Use JPA to add to a user's followers by their id, the user to be following's id, and the array index
-    @Query(value = "insert into user_followers (user_id, follower_id, follower_idx) values (:uid, :fid, :idx)", nativeQuery = true)
+    @Query(value = "insert into user_followers (user_id, follower_id, followers_idx) values (:uid, :fid, :idx)", nativeQuery = true)
     public void addUserFollower(@Param("uid") Long uid, @Param("fid") Long fid, @Param("idx") int idx);
 
     // Use JPA to add to a user's favorites by their id, the favorite ID, and the array index
-    @Query(value = "insert into user_favorites (user_id, favorite_id, favorite_idx) values (:uid, :fid, :idx)", nativeQuery = true)
+    @Query(value = "insert into user_favorites (user_id, favorites_idx, favorite_id) values (:uid, :fid, :idx)", nativeQuery = true)
     public void addUserFavorite(@Param("uid") Long uid, @Param("fid") String fid, @Param("idx") int idx);
 }
