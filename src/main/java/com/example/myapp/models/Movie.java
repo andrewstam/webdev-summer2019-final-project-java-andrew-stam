@@ -1,7 +1,7 @@
 // Created by Andrew Stam
 package com.example.myapp.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.example.myapp.converters.MovieConverter;
 
 import javax.persistence.*;
 
@@ -10,6 +10,7 @@ import javax.persistence.*;
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Convert(converter = MovieConverter.class)
     private String id;
 
     public Movie() {
