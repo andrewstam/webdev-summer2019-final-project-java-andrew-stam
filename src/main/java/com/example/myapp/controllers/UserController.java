@@ -101,7 +101,15 @@ public class UserController {
     @PostMapping("/api/users/{uid}/favorites")
     public void addFavorite(@PathVariable("uid") Long id, @RequestBody String fav) {
         int size = repository.findUserFavorites(id).size();
-        // Add to end of the list
+        // Add to end of the list, never need double quotes
+        if (fav.contains("\"")) {
+            // Will always be at beginning and end
+            fav = fav.substring(1, fav.length() - 1);
+        }
+        // Skip duplicates
+        if (repository.findUserFavorites(id).contains(fav)) {
+            return;
+        }
         repository.addUserFavorite(id, fav, size);
     }
 
