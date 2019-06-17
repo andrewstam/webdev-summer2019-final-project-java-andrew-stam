@@ -115,6 +115,11 @@ public class UserController {
     // Remove from a user's favorites list by the user's ID and the given favorite
     @DeleteMapping("/api/users/{uid}/favorites")
     public void removeFavorite(@PathVariable("uid") Long id, @RequestBody String fav) {
+        // Remove any double quotes, always at beginning and end
+        if (fav.contains("\"")) {
+            // Will always be at beginning and end
+            fav = fav.substring(1, fav.length() - 1);
+        }
         repository.removeUserFavorite(id, fav);
     }
 
