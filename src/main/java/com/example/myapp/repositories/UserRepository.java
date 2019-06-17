@@ -9,6 +9,8 @@ import java.util.List;
 
 import com.example.myapp.models.User;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
@@ -42,14 +44,20 @@ public interface UserRepository extends CrudRepository<User, Long> {
     public List<String> findUserFavorites(@Param("id") Long id);
 
     // Use JPA to add to a user's following by their id, the user to follow's id, and the array index
+    @Modifying
+    @Transactional
     @Query(value = "insert into user_following (user_id, following_id, following_idx) values (:uid, :fid, :idx)", nativeQuery = true)
     public void addUserFollowing(@Param("uid") Long uid, @Param("fid") Long fid, @Param("idx") int idx);
 
     // Use JPA to add to a user's followers by their id, the user to be following's id, and the array index
+    @Modifying
+    @Transactional
     @Query(value = "insert into user_followers (user_id, follower_id, followers_idx) values (:uid, :fid, :idx)", nativeQuery = true)
     public void addUserFollower(@Param("uid") Long uid, @Param("fid") Long fid, @Param("idx") int idx);
 
     // Use JPA to add to a user's favorites by their id, the favorite ID, and the array index
-    @Query(value = "insert into user_favorites (user_id, favorites_idx, favorite_id) values (:uid, :fid, :idx)", nativeQuery = true)
+    @Modifying
+    @Transactional
+    @Query(value = "insert into user_favorites (user_id, favorites_idx, favorites) values (:uid, :idx, :fid)", nativeQuery = true)
     public void addUserFavorite(@Param("uid") Long uid, @Param("fid") String fid, @Param("idx") int idx);
 }
