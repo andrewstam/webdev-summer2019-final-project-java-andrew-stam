@@ -92,9 +92,9 @@ public class User {
         this.dob = copy.getDob();
         this.role = copy.getRole();
         this.email = copy.getEmail();
-        this.following = copy.getFollowing();
-        this.followers = copy.getFollowers();
-        this.favorites = copy.getFavorites();
+        //this.following = copy.getFollowing(); don't change these lists, they have specific methods to do so
+        //this.followers = copy.getFollowers();
+        //this.favorites = copy.getFavorites();
     }
 
     // Return a copy of this object with password hidden for security
