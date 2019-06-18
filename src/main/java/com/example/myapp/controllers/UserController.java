@@ -67,7 +67,10 @@ public class UserController {
     // Add to a user's followers list by the user's ID
     @PostMapping("/api/users/{uid}/followers")
     public void addFollower(@PathVariable("uid") Long id, @RequestBody Long addId) {
-        repository.addUserFollower(id, addId);
+        // If not a follower already
+        if (!repository.findUserFollowers(id).contains(addId)) {
+            repository.addUserFollower(id, addId);
+        }
     }
 
     // Find a user's following by the user's ID
@@ -84,7 +87,10 @@ public class UserController {
     // Add to a user's following list by the user's ID, return the new list
     @PostMapping("/api/users/{uid}/following")
     public void addFollowing(@PathVariable("uid") Long id, @RequestBody Long addId) {
-        repository.addUserFollowing(id, addId);
+        // If not following already
+        if (!repository.findUserFollowing(id).contains(addId)) {
+            repository.addUserFollowing(id, addId);
+        }
     }
 
     // Find a user's favorites list by the user's ID
@@ -102,10 +108,9 @@ public class UserController {
             fav = fav.substring(1, fav.length() - 1);
         }
         // Skip duplicates
-        if (repository.findUserFavorites(id).contains(fav)) {
-            return;
+        if (!repository.findUserFavorites(id).contains(fav)) {
+            repository.addUserFavorite(id, fav);
         }
-        repository.addUserFavorite(id, fav);
     }
 
     // Remove from a user's favorites list by the user's ID and the given favorite
