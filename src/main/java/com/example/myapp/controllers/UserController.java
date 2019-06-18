@@ -67,9 +67,7 @@ public class UserController {
     // Add to a user's followers list by the user's ID
     @PostMapping("/api/users/{uid}/followers")
     public void addFollower(@PathVariable("uid") Long id, @RequestBody Long addId) {
-        int size = repository.findUserFollowers(id).size();
-        // Add to end of the list
-        repository.addUserFollower(id, addId, size);
+        repository.addUserFollower(id, addId);
     }
 
     // Find a user's following by the user's ID
@@ -86,9 +84,7 @@ public class UserController {
     // Add to a user's following list by the user's ID, return the new list
     @PostMapping("/api/users/{uid}/following")
     public void addFollowing(@PathVariable("uid") Long id, @RequestBody Long addId) {
-        int size = repository.findUserFollowing(id).size();
-        // Add to end of the list
-        repository.addUserFollowing(id, addId, size);
+        repository.addUserFollowing(id, addId);
     }
 
     // Find a user's favorites list by the user's ID

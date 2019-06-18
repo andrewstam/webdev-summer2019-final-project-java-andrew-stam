@@ -24,12 +24,12 @@ public class User {
 
     @JsonIgnore
     @ManyToMany
-    @OrderColumn(name = "following_idx")
+    @ElementCollection
     private List<User> following;
 
     @JsonIgnore
     @ManyToMany
-    @OrderColumn(name = "followers_idx")
+    @ElementCollection
     private List<User> followers;
 
     @JsonIgnore
