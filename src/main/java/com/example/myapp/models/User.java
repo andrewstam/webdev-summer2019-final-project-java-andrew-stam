@@ -22,13 +22,24 @@ public class User {
     private RoleType role;
     private String email;
 
+    // The 2 following @JoineTable statements were based on code found here:
+    // https://stackoverflow.com/questions/22276218/persistence-manytomany-to-same-class
+
     @JsonIgnore
     @ManyToMany
+    @JoinTable(name = "user_following",
+            joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
+            inverseJoinColumns={@JoinColumn(name="following_id", referencedColumnName="id")}
+    )
     @ElementCollection
     private List<User> following;
 
     @JsonIgnore
     @ManyToMany
+    @JoinTable(name = "user_followers",
+            joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
+            inverseJoinColumns={@JoinColumn(name="followers_id", referencedColumnName="id")}
+    )
     @ElementCollection
     private List<User> followers;
 
