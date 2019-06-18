@@ -32,12 +32,12 @@ public interface UserRepository extends CrudRepository<User, Long> {
     public User findUserById(@Param("id") Long id);
 
     // Use JPA to find a user's following by their id, return that list
-    @Query(value = "select * from user_following where user_id=:id", nativeQuery = true)
-    public List<User> findUserFollowing(@Param("id") Long id);
+    @Query(value = "select following_id from user_following where user_id=:id", nativeQuery = true)
+    public List<Long> findUserFollowing(@Param("id") Long id);
 
     // Use JPA to find a user's followers by their id, return that list
-    @Query(value = "select * from user_followers where user_id=:id", nativeQuery = true)
-    public List<User> findUserFollowers(@Param("id") Long id);
+    @Query(value = "select followers_id from user_followers where user_id=:id", nativeQuery = true)
+    public List<Long> findUserFollowers(@Param("id") Long id);
 
     // Use JPA to find a user's favorites by their id, return that list
     @Query(value = "select * from user_favorites where user_id=:id", nativeQuery = true)

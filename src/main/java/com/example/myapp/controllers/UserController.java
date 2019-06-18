@@ -58,8 +58,9 @@ public class UserController {
     public List<User> findFollowers(@PathVariable("uid") Long id) {
         // Block all passwords from being sent
         List<User> ret = new ArrayList<>();
-        for (User u : repository.findUserFollowers(id)) {
-            ret.add(u.safeCopy());
+        for (Long fid : repository.findUserFollowers(id)) {
+            System.out.println("\n\n\n\n\nFOLLOWERS: " + id + " " + fid);
+            ret.add(repository.findUserById(fid).safeCopy());
         }
         return ret;
     }
@@ -75,8 +76,9 @@ public class UserController {
     public List<User> findFollowing(@PathVariable("uid") Long id) {
         // Block all passwords from being sent
         List<User> ret = new ArrayList<>();
-        for (User u : repository.findUserFollowing(id)) {
-            ret.add(u.safeCopy());
+        for (Long fid : repository.findUserFollowing(id)) {
+            System.out.println("\n\n\n\n\nFOLLOWING: " + id + " " + fid);
+            ret.add(repository.findUserById(fid).safeCopy());
         }
         return ret;
     }
