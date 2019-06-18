@@ -49,13 +49,13 @@ public interface UserRepository extends CrudRepository<User, Long> {
     @Query(value = "insert into user_following (user_id, following_id) values (:uid, :fid)", nativeQuery = true)
     public void addUserFollowing(@Param("uid") Long uid, @Param("fid") Long fid);
 
-    // Use JPA to add to a user's followers by their id, the user to be following's id, and the array index
+    // Use JPA to add to a user's followers by their id, the user to be following's id
     @Modifying
     @Transactional
     @Query(value = "insert into user_followers (user_id, followers_id) values (:uid, :fid)", nativeQuery = true)
     public void addUserFollower(@Param("uid") Long uid, @Param("fid") Long fid);
 
-    // Use JPA to add to a user's favorites by their id, the favorite ID, and the array index
+    // Use JPA to add to a user's favorites by their id, the favorite ID
     @Modifying
     @Transactional
     @Query(value = "insert into user_favorites (user_id, favorites) values (:uid, :fid)", nativeQuery = true)
@@ -66,4 +66,16 @@ public interface UserRepository extends CrudRepository<User, Long> {
     @Transactional
     @Query(value = "delete from user_favorites where user_id=:uid and favorites=:fid", nativeQuery = true)
     public void removeUserFavorite(@Param("uid") Long uid, @Param("fid") String fid);
+
+    // Use JPA to remove from a user's following by their id, the user to follow's id
+    @Modifying
+    @Transactional
+    @Query(value = "delete from user_following where user_id=:uid and following_id=:fid", nativeQuery = true)
+    public void removeUserFollowing(@Param("uid") Long uid, @Param("fid") Long fid);
+
+    // Use JPA to remove from a user's followers by their id, the user to be following's id
+    @Modifying
+    @Transactional
+    @Query(value = "delete from user_followers where user_id=:uid and followers_id=:fid", nativeQuery = true)
+    public void removeUserFollower(@Param("uid") Long uid, @Param("fid") Long fid);
 }

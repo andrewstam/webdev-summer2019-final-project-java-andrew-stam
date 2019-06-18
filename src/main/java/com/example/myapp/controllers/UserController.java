@@ -73,6 +73,15 @@ public class UserController {
         }
     }
 
+    // Remove from a user's followers list by the user's ID
+    @DeleteMapping("/api/users/{uid}/followers")
+    public void removeFollower(@PathVariable("uid") Long id, @RequestBody Long rmvId) {
+        // If currently a follower
+        if (repository.findUserFollowers(id).contains(rmvId)) {
+            repository.removeUserFollower(id, rmvId);
+        }
+    }
+
     // Find a user's following by the user's ID
     @GetMapping("/api/users/{uid}/following")
     public List<User> findFollowing(@PathVariable("uid") Long id) {
@@ -84,12 +93,21 @@ public class UserController {
         return ret;
     }
 
-    // Add to a user's following list by the user's ID, return the new list
+    // Add to a user's following list by the user's ID
     @PostMapping("/api/users/{uid}/following")
     public void addFollowing(@PathVariable("uid") Long id, @RequestBody Long addId) {
         // If not following already
         if (!repository.findUserFollowing(id).contains(addId)) {
             repository.addUserFollowing(id, addId);
+        }
+    }
+
+    // Remove from a user's following list by the user's ID
+    @DeleteMapping("/api/users/{uid}/following")
+    public void removeFollowing(@PathVariable("uid") Long id, @RequestBody Long rmvId) {
+        // If currently following
+        if (repository.findUserFollowing(id).contains(rmvId)) {
+            repository.removeUserFollowing(id, rmvId);
         }
     }
 
