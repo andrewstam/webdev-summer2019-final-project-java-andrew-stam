@@ -59,7 +59,6 @@ public class UserController {
         // Block all passwords from being sent
         List<User> ret = new ArrayList<>();
         for (Long fid : repository.findUserFollowers(id)) {
-            System.out.println("\n\n\n\n\nFOLLOWERS: " + id + " " + fid);
             ret.add(repository.findUserById(fid).safeCopy());
         }
         return ret;
@@ -77,7 +76,6 @@ public class UserController {
         // Block all passwords from being sent
         List<User> ret = new ArrayList<>();
         for (Long fid : repository.findUserFollowing(id)) {
-            System.out.println("\n\n\n\n\nFOLLOWING: " + id + " " + fid);
             ret.add(repository.findUserById(fid).safeCopy());
         }
         return ret;
