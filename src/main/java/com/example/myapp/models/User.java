@@ -21,7 +21,7 @@ public class User {
     private RoleType role;
     private String email;
 
-    // The 2 following @JoineTable statements were based on code found here:
+    // The 2 following @JoinTable statements were based on code found here:
     // https://stackoverflow.com/questions/22276218/persistence-manytomany-to-same-class
 
     @JsonIgnore
@@ -43,6 +43,7 @@ public class User {
     private List<User> followers;
 
     @JsonIgnore
+    @OneToMany
     @ElementCollection
     private List<String> favorites;
 
