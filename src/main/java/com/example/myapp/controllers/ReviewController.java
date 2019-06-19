@@ -75,13 +75,19 @@ public class ReviewController {
     }
 
     // Find the review of a movie by a user by their ids, return that review (text only)
-    @GetMapping("/api/reviews/{mid}/{uid}")
+    @GetMapping("/api/reviews/{mid}/{uid}/text")
     public String findWrittenReviewForMovieByUserId(@PathVariable("uid") String mid, @PathVariable("mid") Long uid) {
         return repository.findWrittenReviewForMovieByUserId(uid, mid);
     }
 
+    // Find the review of a movie by a user by their ids, return that review (text only)
+    @GetMapping("/api/reviews/{mid}/{uid}/stars")
+    public Integer findStarsForMovieByUserId(@PathVariable("uid") String mid, @PathVariable("mid") Long uid) {
+        return repository.findStarsForMovieByUserId(uid, mid);
+    }
+
     // Add a review of a movie by a user by their ids, storing the text and star rating. Returns if added
-    @PutMapping("/api/reviews/{mid}/{uid}/{stars}")
+    @PostMapping("/api/reviews/{mid}/{uid}/{stars}")
     public boolean createReview(@PathVariable("uid") Long uid, @PathVariable("mid") String mid, @RequestBody String text, @PathVariable("stars") Integer stars) {
         // If this user doesn't have a review for the movie already
         if (!repository.findUserMovieReivews(uid).contains(mid)) {
@@ -89,6 +95,30 @@ public class ReviewController {
             return true;
         }
         return false;
+    }
+
+    // Update a star rating of a movie by a user by their ids
+    @PutMapping("/api/reviews/{mid}/{uid}/stars")
+    public void updateStars(@PathVariable("uid") Long uid, @PathVariable("mid") String mid, @RequestBody Integer stars) {
+        // If this user has a review for the movie already
+        if (repository.findUserMovieReivews(uid).contains(mid)) {
+            repository.updateStars(uid, mid, stars);
+        } else {
+            // Create review, one doesn't exist
+            repository.createReview(uid, mid, null, stars);
+        }
+    }
+
+    // Update a star rating of a movie by a user by their ids
+    @PutMapping("/api/reviews/{mid}/{uid}/text")
+    public void updateText(@PathVariable("uid") Long uid, @PathVariable("mid") String mid, @RequestBody String text) {
+        // If this user has a review for the movie already
+        if (repository.findUserMovieReivews(uid).contains(mid)) {
+            repository.updateText(uid, mid, text);
+        } else {
+            // Create review, one doesn't exist
+            repository.createReview(uid, mid, text, 0);
+        }
     }
 
     // Delete a review of a movie by a user by their ids, return if was deleted successfully

@@ -43,6 +43,10 @@ public interface ReviewRepository extends CrudRepository<Review, Long> {
     @Query(value = "select review_text from review where user_id=:uid and movie_id=:mid", nativeQuery = true)
     public String findWrittenReviewForMovieByUserId(@Param("uid") Long uid, @Param("mid") String mid);
 
+    // Use JPA to find the review of a movie by a user by their ids, return that review (text only)
+    @Query(value = "select stars from review where user_id=:uid and movie_id=:mid", nativeQuery = true)
+    public Integer findStarsForMovieByUserId(@Param("uid") Long uid, @Param("mid") String mid);
+
     // Use JPA to find the list of movies a user has written reviews for
     @Query(value = "select movie_id from review where user_id=:uid", nativeQuery = true)
     public List<String> findUserMovieReivews(@Param("uid") Long uid);
@@ -52,6 +56,18 @@ public interface ReviewRepository extends CrudRepository<Review, Long> {
     @Transactional
     @Query(value = "insert into review (user_id, movie_id, review_text, stars) values (:uid, :mid, :txt, :stz)", nativeQuery = true)
     public void createReview(@Param("uid") Long uid, @Param("mid") String mid, @Param("txt") String text, @Param("stz") Integer stars);
+
+    // Use JPA to update a star rating of a movie by a user by their ids
+    @Modifying
+    @Transactional
+    @Query(value = "update review set stars=:stz where user_id=:uid and movie_id:mid", nativeQuery = true)
+    public void updateStars(@Param("uid") Long uid, @Param("mid") String mid, @Param("stz") Integer stars);
+
+    // Use JPA to update review text of a movie by a user by their ids
+    @Modifying
+    @Transactional
+    @Query(value = "update review set review_text=:txt where user_id=:uid and movie_id:mid", nativeQuery = true)
+    public void updateText(@Param("uid") Long uid, @Param("mid") String mid, @Param("txt") String text);
 
     // Use JPA to delete a review of a movie by a user by their ids
     @Modifying
