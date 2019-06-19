@@ -111,6 +111,12 @@ public class ReviewController {
     // Update a star rating of a movie by a user by their ids
     @PutMapping("/api/reviews/{mid}/{uid}/stars")
     public void updateStars(@PathVariable("uid") Long uid, @PathVariable("mid") String mid, @RequestBody Integer stars) {
+        // Remove any quotes, always at beginning and end
+        if (mid.contains("\"")) {
+            // Will always be at beginning and end
+            mid = mid.substring(1, mid.length() - 1);
+        }
+
         // If this user has a review for the movie already
         if (repository.findUserMovieReivews(uid).contains(mid)) {
             repository.updateStars(uid, mid, stars);
@@ -123,6 +129,17 @@ public class ReviewController {
     // Update a star rating of a movie by a user by their ids
     @PutMapping("/api/reviews/{mid}/{uid}/text")
     public void updateText(@PathVariable("uid") Long uid, @PathVariable("mid") String mid, @RequestBody String text) {
+        // Remove any quotes, always at beginning and end
+        if (mid.contains("\"")) {
+            // Will always be at beginning and end
+            mid = mid.substring(1, mid.length() - 1);
+        }
+        // Remove any quotes, always at beginning and end
+        if (text.contains("\"")) {
+            // Will always be at beginning and end
+            text = text.substring(1, text.length() - 1);
+        }
+
         // If this user has a review for the movie already
         if (repository.findUserMovieReivews(uid).contains(mid)) {
             repository.updateText(uid, mid, text);

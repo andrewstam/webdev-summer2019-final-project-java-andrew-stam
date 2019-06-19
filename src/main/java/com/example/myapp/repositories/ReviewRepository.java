@@ -60,13 +60,13 @@ public interface ReviewRepository extends CrudRepository<Review, Long> {
     // Use JPA to update a star rating of a movie by a user by their ids
     @Modifying
     @Transactional
-    @Query(value = "update review set stars=:stz where user_id=:uid and movie_id:mid", nativeQuery = true)
+    @Query(value = "update review set stars=:stz where user_id=:uid and movie_id=:mid", nativeQuery = true)
     public void updateStars(@Param("uid") Long uid, @Param("mid") String mid, @Param("stz") Integer stars);
 
     // Use JPA to update review text of a movie by a user by their ids
     @Modifying
     @Transactional
-    @Query(value = "update review set review_text=:txt where user_id=:uid and movie_id:mid", nativeQuery = true)
+    @Query(value = "update review set review_text=:txt where user_id=:uid and movie_id=:mid", nativeQuery = true)
     public void updateText(@Param("uid") Long uid, @Param("mid") String mid, @Param("txt") String text);
 
     // Use JPA to delete a review of a movie by a user by their ids
