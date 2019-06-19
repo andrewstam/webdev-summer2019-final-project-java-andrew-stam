@@ -42,6 +42,7 @@ public class User {
     @ElementCollection
     private List<User> followers;
 
+    // One to Many - one user can have many favorites
     @JsonIgnore
     @ElementCollection
     private List<String> favorites;

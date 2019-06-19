@@ -12,11 +12,13 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reviewId;
 
+    // One to many - a user can have many reviews
     @JoinTable(name = "user",
             joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")}
     )
     private Long userId;
 
+    // One to many - a movie can have many reviews
     private String movieId;
 
     // Star rating, 1 to 5
