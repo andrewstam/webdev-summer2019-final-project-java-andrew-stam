@@ -26,7 +26,6 @@ public class UserController {
     public List<User> findAllUsers() {
         // Block all passwords from being sent
         List<User> ret = new ArrayList<>();
-        System.out.println("SIZE :: " + repository.findAllUsers().size());
         for (User u : repository.findAllUsers()) {
             ret.add(u.safeCopy());
         }

@@ -31,17 +31,31 @@ public interface ReviewRepository extends CrudRepository<Review, Long> {
     @Query(value = "select review_text from review where user_id=:id", nativeQuery = true)
     public List<String> findWrittenReviewsByUserId(@Param("id") Long id);
 
-    // TODO can find user average rating
     // Use JPA to find all reviews of a user by their id, return those reviews (stars only)
     @Query(value = "select review_text from review where user_id=:id", nativeQuery = true)
     public List<Integer> findStarReviewsByUserId(@Param("id") Long id);
 
-    // TODO can load recent reviews
     // Use JPA to find all reviews of a user by their id, return those reviews (ids only)
     @Query(value = "select id from review where user_id=:id", nativeQuery = true)
     public List<Long> findReviewIdsByUserId(@Param("id") Long id);
 
-    // Use JPA to find all reviews of a movie by a user by their ids, return those reviews (text only)
+    // Use JPA to find the review of a movie by a user by their ids, return that review (text only)
     @Query(value = "select id from review where user_id=:uid and movie_id=:mid", nativeQuery = true)
     public String findWrittenReviewForMovieByUserId(@Param("uid") Long uid, @Param("mid") String mid);
+
+    // Use JPA to find the list of movies a user has written reviews for
+    @Query(value = "select movie_id from review where user_id=:uid", nativeQuery = true)
+    public List<String> findUserMovieReivews(@Param("uid") Long uid);
+
+    // Use JPA to add a review of a movie by a user by their ids, storing the text and star rating
+    @Modifying
+    @Transactional
+    @Query(value = "insert into review (user_id, movie_id, review_text, stars) values (:uid, :mid, :txt, :stz)", nativeQuery = true)
+    public void createReview(@Param("uid") Long uid, @Param("mid") String mid, @Param("txt") String text, @Param("stz") Integer stars);
+
+    // Use JPA to delete a review of a movie by a user by their ids
+    @Modifying
+    @Transactional
+    @Query(value = "delete from review where user_id=:uid and mid=:mid", nativeQuery = true)
+    public void deleteReview(@Param("uid") Long uid, @Param("mid") String mid);
 }
