@@ -76,13 +76,13 @@ public class ReviewController {
 
     // Find the review of a movie by a user by their ids, return that review (text only)
     @GetMapping("/api/reviews/{mid}/{uid}/text")
-    public String findWrittenReviewForMovieByUserId(@PathVariable("uid") String mid, @PathVariable("mid") Long uid) {
+    public String findWrittenReviewForMovieByUserId(@PathVariable("mid") String mid, @PathVariable("uid") Long uid) {
         return repository.findWrittenReviewForMovieByUserId(uid, mid);
     }
 
     // Find the review of a movie by a user by their ids, return that review (text only)
     @GetMapping("/api/reviews/{mid}/{uid}/stars")
-    public Integer findStarsForMovieByUserId(@PathVariable("uid") String mid, @PathVariable("mid") Long uid) {
+    public Integer findStarsForMovieByUserId(@PathVariable("mid") String mid, @PathVariable("uid") Long uid) {
         return repository.findStarsForMovieByUserId(uid, mid);
     }
 
