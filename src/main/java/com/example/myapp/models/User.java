@@ -43,7 +43,6 @@ public class User {
     private List<User> followers;
 
     @JsonIgnore
-    @OneToMany
     @ElementCollection
     private List<String> favorites;
 
