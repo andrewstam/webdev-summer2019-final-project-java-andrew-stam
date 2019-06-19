@@ -49,7 +49,7 @@ public interface ReviewRepository extends CrudRepository<Review, Long> {
 
     // Use JPA to find the list of movies a user has written reviews for
     @Query(value = "select movie_id from review where user_id=:uid", nativeQuery = true)
-    public List<String> findUserMovieReivews(@Param("uid") Long uid);
+    public List<String> findUserMovieReviews(@Param("uid") Long uid);
 
     // Use JPA to add a review of a movie by a user by their ids, storing the text and star rating
     @Modifying

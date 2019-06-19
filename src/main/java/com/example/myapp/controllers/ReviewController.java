@@ -46,6 +46,12 @@ public class ReviewController {
         return repository.findWrittenReviewsByUserId(id);
     }
 
+    // Find all movie reviews of a user by their id, return those movie ids
+    @GetMapping("/api/reviews/{id}/movies")
+    public List<String> findReviewedMoviesByUserId(@PathVariable("id") Long id) {
+        return repository.findUserMovieReviews(id);
+    }
+
     // Find all reviews of a user by their id, return those reviews (stars only)
     @GetMapping("/api/reviews/{id}/user/stars")
     public List<Integer> findStarReviewsByUserId(@PathVariable("id") Long id) {
@@ -78,7 +84,7 @@ public class ReviewController {
     @GetMapping("/api/reviews/{mid}/{uid}/text")
     public String findWrittenReviewForMovieByUserId(@PathVariable("mid") String mid, @PathVariable("uid") Long uid) {
         // If this user has a review for the movie
-        if (repository.findUserMovieReivews(uid).contains(mid)) {
+        if (repository.findUserMovieReviews(uid).contains(mid)) {
             return repository.findWrittenReviewForMovieByUserId(uid, mid);
         } else {
             return "";
@@ -89,7 +95,7 @@ public class ReviewController {
     @GetMapping("/api/reviews/{mid}/{uid}/stars")
     public Integer findStarsForMovieByUserId(@PathVariable("mid") String mid, @PathVariable("uid") Long uid) {
         // If this user has a review for the movie already
-        if (repository.findUserMovieReivews(uid).contains(mid)) {
+        if (repository.findUserMovieReviews(uid).contains(mid)) {
             return repository.findStarsForMovieByUserId(uid, mid);
         } else {
             // default
@@ -101,7 +107,7 @@ public class ReviewController {
     @PostMapping("/api/reviews/{mid}/{uid}/{stars}")
     public boolean createReview(@PathVariable("uid") Long uid, @PathVariable("mid") String mid, @RequestBody String text, @PathVariable("stars") Integer stars) {
         // If this user doesn't have a review for the movie already
-        if (!repository.findUserMovieReivews(uid).contains(mid)) {
+        if (!repository.findUserMovieReviews(uid).contains(mid)) {
             repository.createReview(uid, mid, text, stars);
             return true;
         }
@@ -118,7 +124,7 @@ public class ReviewController {
         }
 
         // If this user has a review for the movie already
-        if (repository.findUserMovieReivews(uid).contains(mid)) {
+        if (repository.findUserMovieReviews(uid).contains(mid)) {
             repository.updateStars(uid, mid, stars);
         } else {
             // Create review, one doesn't exist
@@ -141,7 +147,7 @@ public class ReviewController {
         }
 
         // If this user has a review for the movie already
-        if (repository.findUserMovieReivews(uid).contains(mid)) {
+        if (repository.findUserMovieReviews(uid).contains(mid)) {
             repository.updateText(uid, mid, text);
         } else {
             // Create review, one doesn't exist
@@ -153,7 +159,7 @@ public class ReviewController {
     @DeleteMapping("/api/reviews/{mid}/{uid}")
     public boolean deleteReview(@PathVariable("uid") Long uid, @PathVariable("mid") String mid) {
         // If this user does have a review for the movie already
-        if (repository.findUserMovieReivews(uid).contains(mid)) {
+        if (repository.findUserMovieReviews(uid).contains(mid)) {
             repository.deleteReview(uid, mid);
             return true;
         }
