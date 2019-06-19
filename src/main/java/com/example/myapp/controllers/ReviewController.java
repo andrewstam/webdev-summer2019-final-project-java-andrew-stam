@@ -77,13 +77,24 @@ public class ReviewController {
     // Find the review of a movie by a user by their ids, return that review (text only)
     @GetMapping("/api/reviews/{mid}/{uid}/text")
     public String findWrittenReviewForMovieByUserId(@PathVariable("mid") String mid, @PathVariable("uid") Long uid) {
-        return repository.findWrittenReviewForMovieByUserId(uid, mid);
+        // If this user has a review for the movie
+        if (repository.findUserMovieReivews(uid).contains(mid)) {
+            return repository.findWrittenReviewForMovieByUserId(uid, mid);
+        } else {
+            return "";
+        }
     }
 
     // Find the review of a movie by a user by their ids, return that review (text only)
     @GetMapping("/api/reviews/{mid}/{uid}/stars")
     public Integer findStarsForMovieByUserId(@PathVariable("mid") String mid, @PathVariable("uid") Long uid) {
-        return repository.findStarsForMovieByUserId(uid, mid);
+        // If this user has a review for the movie already
+        if (repository.findUserMovieReivews(uid).contains(mid)) {
+            return repository.findStarsForMovieByUserId(uid, mid);
+        } else {
+            // default
+            return 1;
+        }
     }
 
     // Add a review of a movie by a user by their ids, storing the text and star rating. Returns if added
