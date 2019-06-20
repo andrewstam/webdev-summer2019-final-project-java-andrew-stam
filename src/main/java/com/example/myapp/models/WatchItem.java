@@ -26,9 +26,6 @@ public class WatchItem {
     private List<Comment> comments;
 
     @JsonIgnore
-    /*@JoinTable(name = "user",
-            joinColumns={@JoinColumn(name="attending_member_ids", referencedColumnName="id")}
-    )*/
     @ElementCollection
     private List<Long> attendingMemberIds;
 

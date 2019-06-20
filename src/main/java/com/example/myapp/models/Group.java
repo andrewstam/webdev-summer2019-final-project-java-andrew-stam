@@ -20,9 +20,6 @@ public class Group {
     private Long leaderId;
 
     @JsonIgnore
-    /*@JoinTable(name = "user",
-            joinColumns={@JoinColumn(name="member_ids", referencedColumnName="id")}
-    )*/
     @ElementCollection
     private List<Long> memberIds;
 
