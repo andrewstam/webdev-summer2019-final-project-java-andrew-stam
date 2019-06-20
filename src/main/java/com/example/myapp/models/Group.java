@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long groupId;
+    private Long id;
 
     @JoinTable(name = "user",
             joinColumns={@JoinColumn(name="leader_id", referencedColumnName="id")}
@@ -20,39 +20,39 @@ public class Group {
     private Long leaderId;
 
     @JsonIgnore
-    @JoinTable(name = "user",
-            joinColumns={@JoinColumn(name="members_id", referencedColumnName="id")}
-    )
+    /*@JoinTable(name = "user",
+            joinColumns={@JoinColumn(name="member_ids", referencedColumnName="id")}
+    )*/
     @ElementCollection
     private List<Long> memberIds;
 
     @JsonIgnore
     @JoinTable(name = "watchitem",
-            joinColumns={@JoinColumn(name="watch_items", referencedColumnName="item_id")}
+            joinColumns={@JoinColumn(name="watch_items", referencedColumnName="id")}
     )
     @OneToMany
     private List<WatchItem> watchItems;
 
-    public Group(Long groupId, Long leaderId, List<Long> memberIds, List<WatchItem> watchItems) {
-        this.groupId = groupId;
+    public Group(Long id, Long leaderId, List<Long> memberIds, List<WatchItem> watchItems) {
+        this.id = id;
         this.leaderId = leaderId;
         this.memberIds = memberIds;
         this.watchItems = watchItems;
     }
 
     public Group() {
-        this.groupId = null;
+        this.id = null;
         this.leaderId = null;
         this.memberIds = null;
         this.watchItems = null;
     }
 
     public Long getGroupId() {
-        return groupId;
+        return id;
     }
 
-    public void setGroupId(Long groupId) {
-        this.groupId = groupId;
+    public void setGroupId(Long id) {
+        this.id = id;
     }
 
     public Long getLeaderId() {

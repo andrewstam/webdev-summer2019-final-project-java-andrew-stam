@@ -1,6 +1,8 @@
 // Created by Andrew Stam
 package com.example.myapp.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -8,7 +10,7 @@ import javax.persistence.*;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commentId;
+    private Long id;
 
     @JoinTable(name = "user",
             joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")}
@@ -17,24 +19,31 @@ public class Comment {
 
     private String text;
 
-    public Comment(Long commentId, Long userId, String text) {
-        this.commentId = commentId;
+    @JsonIgnore
+    @ManyToOne
+    @JoinTable(name = "watchitem",
+            joinColumns={@JoinColumn(name="watch_item", referencedColumnName="id")}
+    )
+    private WatchItem watchItem;
+
+    public Comment(Long id, Long userId, String text) {
+        this.id = id;
         this.userId = userId;
         this.text = text;
     }
 
     public Comment() {
-        this.commentId = null;
+        this.id = null;
         this.userId = null;
         this.text = null;
     }
 
     public Long getCommentId() {
-        return commentId;
+        return id;
     }
 
-    public void setCommentId(Long commentId) {
-        this.commentId = commentId;
+    public void setCommentId(Long id) {
+        this.id = id;
     }
 
     public Long getUserId() {

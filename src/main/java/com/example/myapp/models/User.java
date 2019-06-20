@@ -49,12 +49,12 @@ public class User {
 
     // GroupLeaders can lead many groups, GroupMembers can be in many groups
     @JsonIgnore
-    @ManyToMany
     @JoinTable(name = "user_groups",
             joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
-            inverseJoinColumns={@JoinColumn(name="groups_id", referencedColumnName="group_id")}
+            inverseJoinColumns={@JoinColumn(name="groups_id", referencedColumnName="id")}
     )
     @ElementCollection
+    @ManyToMany
     private List<Group> groups;
 
     // Create a new User with the given attributes

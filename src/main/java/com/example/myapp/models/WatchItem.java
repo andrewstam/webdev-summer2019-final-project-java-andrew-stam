@@ -11,7 +11,7 @@ import java.util.List;
 public class WatchItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long itemId;
+    private Long id;
 
     private String movieId;
 
@@ -19,20 +19,21 @@ public class WatchItem {
 
     @JsonIgnore
     @JoinTable(name = "comment",
-            joinColumns={@JoinColumn(name="comments", referencedColumnName="comment_id")}
+            joinColumns={@JoinColumn(name="comments", referencedColumnName="id")}
     )
     @OneToMany
+    @ElementCollection
     private List<Comment> comments;
 
     @JsonIgnore
-    @JoinTable(name = "user",
+    /*@JoinTable(name = "user",
             joinColumns={@JoinColumn(name="attending_member_ids", referencedColumnName="id")}
-    )
+    )*/
     @ElementCollection
     private List<Long> attendingMemberIds;
 
-    public WatchItem(Long itemId, String movieId, String watchDate, List<Comment> comments, List<Long> attendingMemberIds) {
-        this.itemId = itemId;
+    public WatchItem(Long id, String movieId, String watchDate, List<Comment> comments, List<Long> attendingMemberIds) {
+        this.id = id;
         this.movieId = movieId;
         this.watchDate = watchDate;
         this.comments = comments;
@@ -40,7 +41,7 @@ public class WatchItem {
     }
 
     public WatchItem() {
-        this.itemId = null;
+        this.id = null;
         this.movieId = null;
         this.watchDate = null;
         this.comments = null;
@@ -48,11 +49,11 @@ public class WatchItem {
     }
 
     public Long getItemId() {
-        return itemId;
+        return id;
     }
 
-    public void setItemId(Long itemId) {
-        this.itemId = itemId;
+    public void setItemId(Long id) {
+        this.id = id;
     }
 
     public String getMovieId() {
