@@ -1,6 +1,8 @@
 // Created by Andrew Stam
 package com.example.myapp.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.List;
 
 import javax.persistence.*;
@@ -12,10 +14,23 @@ public class Group {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long groupId;
 
+    @JoinTable(name = "user",
+            joinColumns={@JoinColumn(name="leader_id", referencedColumnName="id")}
+    )
     private Long leaderId;
 
+    @JsonIgnore
+    @JoinTable(name = "user",
+            joinColumns={@JoinColumn(name="members_id", referencedColumnName="id")}
+    )
+    @ElementCollection
     private List<Long> memberIds;
 
+    @JsonIgnore
+    @JoinTable(name = "watchitem",
+            joinColumns={@JoinColumn(name="watch_items", referencedColumnName="item_id")}
+    )
+    @OneToMany
     private List<WatchItem> watchItems;
 
     public Group(Long groupId, Long leaderId, List<Long> memberIds, List<WatchItem> watchItems) {

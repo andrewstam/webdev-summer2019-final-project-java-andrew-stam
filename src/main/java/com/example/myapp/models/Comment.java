@@ -10,6 +10,9 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
 
+    @JoinTable(name = "user",
+            joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")}
+    )
     private Long userId;
 
     private String text;

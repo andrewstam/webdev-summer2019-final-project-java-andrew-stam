@@ -47,6 +47,16 @@ public class User {
     @ElementCollection
     private List<String> favorites;
 
+    // GroupLeaders can lead many groups, GroupMembers can be in many groups
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(name = "user_groups",
+            joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
+            inverseJoinColumns={@JoinColumn(name="groups_id", referencedColumnName="group_id")}
+    )
+    @ElementCollection
+    private List<Group> groups;
+
     // Create a new User with the given attributes
     public User(Long id, String username, String password, String firstname, String lastname,
                 String dob, RoleType role, String email, List<User> following, List<User> followers, List<String> favorites) {

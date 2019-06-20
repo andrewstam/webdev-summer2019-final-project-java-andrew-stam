@@ -1,6 +1,8 @@
 // Created by Andrew Stam
 package com.example.myapp.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -15,11 +17,21 @@ public class WatchItem {
 
     private String watchDate;
 
+    @JsonIgnore
+    @JoinTable(name = "comment",
+            joinColumns={@JoinColumn(name="comments", referencedColumnName="comment_id")}
+    )
+    @OneToMany
     private List<Comment> comments;
 
+    @JsonIgnore
+    @JoinTable(name = "user",
+            joinColumns={@JoinColumn(name="attending_member_ids", referencedColumnName="id")}
+    )
+    @ElementCollection
     private List<Long> attendingMemberIds;
 
-    public WatchItem(Long itemId, String movieId, Strin gwatchDate, List<Comment> comments, List<Long> attendingMemberIds) {
+    public WatchItem(Long itemId, String movieId, String watchDate, List<Comment> comments, List<Long> attendingMemberIds) {
         this.itemId = itemId;
         this.movieId = movieId;
         this.watchDate = watchDate;
