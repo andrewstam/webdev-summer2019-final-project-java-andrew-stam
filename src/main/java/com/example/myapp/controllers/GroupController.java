@@ -116,9 +116,9 @@ public class GroupController {
         return repository.findAttendingMembers(wid);
     }
 
-    // Find a groups's watch item's comments by its id, return that list
+    // Find a groups's watch item's comments by its id, return that list as strings
     @GetMapping("/api/groups/{wid}/comments")
-    public List<Comment> findItemComments(@PathVariable("wid") Long wid) {
+    public List<String> findItemComments(@PathVariable("wid") Long wid) {
         return repository.findItemComments(wid);
     }
 
