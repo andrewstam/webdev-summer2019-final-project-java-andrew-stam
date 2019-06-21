@@ -1,6 +1,7 @@
 // Created by Andrew Stam
 package com.example.myapp.controllers;
 
+import com.example.myapp.models.Group;
 import com.example.myapp.models.User;
 import com.example.myapp.models.RoleType;
 import com.example.myapp.repositories.UserRepository;
@@ -145,6 +146,12 @@ public class UserController {
     @DeleteMapping("/api/users/{userId}")
     public void deleteUser(@PathVariable("userId") Long userId) {
         repository.deleteById(userId);
+    }
+
+    // Find a User's groups by their ID
+    @GetMapping("/api/users/{userId}/groups")
+    public List<Long> findUserGroups(@PathVariable("userId") Long userId) {
+        return repository.findUserGroups(userId);
     }
 
     // Update all users

@@ -103,7 +103,7 @@ public class GroupController {
     }
 
     // Find a groups's watch item's attending members by its id, return that list
-    @GetMapping("/api/groups/{wid}/members")
+    @GetMapping("/api/groups/{wid}/members/attending")
     public List<Long> findAttendingMembers(@PathVariable("wid") Long wid) {
         return repository.findAttendingMembers(wid);
     }
