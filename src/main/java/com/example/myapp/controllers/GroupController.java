@@ -74,9 +74,9 @@ public class GroupController {
         repository.deleteUser(gid, uid);
     }
 
-    // Find the group's WatchItems
+    // Find the group's WatchItems as Strings
     @GetMapping("/api/groups/{gid}/watch")
-    public List<WatchItem> findGroupWatchItems(@PathVariable("gid") Long id) {
+    public List<String> findGroupWatchItems(@PathVariable("gid") Long id) {
         return repository.findGroupWatchItems(id);
     }
 

@@ -4,6 +4,7 @@ package com.example.myapp.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -32,8 +33,9 @@ public class WatchItem {
     @ElementCollection
     private List<Long> attendingMemberIds;
 
-    public WatchItem(Long id, String movieId, String watchDate, List<Long> attendingMemberIds) {
+    public WatchItem(Long id, Long groupId, String movieId, String watchDate, List<Long> attendingMemberIds) {
         this.id = id;
+        this.groupId = groupId;
         this.movieId = movieId;
         this.watchDate = watchDate;
         this.attendingMemberIds = attendingMemberIds;
@@ -41,17 +43,26 @@ public class WatchItem {
 
     public WatchItem() {
         this.id = null;
+        this.groupId = null;
         this.movieId = null;
         this.watchDate = null;
         this.attendingMemberIds = null;
     }
 
-    public Long getItemId() {
+    public Long getId() {
         return id;
     }
 
-    public void setItemId(Long id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
     }
 
     public String getMovieId() {

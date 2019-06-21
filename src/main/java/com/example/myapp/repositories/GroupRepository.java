@@ -61,7 +61,7 @@ public interface GroupRepository extends CrudRepository<Group, Long> {
 
     // Use JPA to find the group's WatchItems
     @Query(value = "select * from watchitem where group_id=:id", nativeQuery = true)
-    public List<WatchItem> findGroupWatchItems(@Param("id") Long id);
+    public List<String> findGroupWatchItems(@Param("id") Long id);
 
     // Use JPA to add a watch item
     @Modifying
