@@ -6,7 +6,6 @@ import com.example.myapp.repositories.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -32,6 +31,12 @@ public class ReviewController {
     @GetMapping("/api/reviews/{id}/movie/text")
     public List<String> findWrittenReviewsByMovieId(@PathVariable("id") String id) {
         return repository.findWrittenReviewsByMovieId(id);
+    }
+
+    // Find all reviews of a movie by its id, return those reviews as a string list
+    @GetMapping("/api/reviews/{id}/movie")
+    public List<String> findReviewsByMovieId(@PathVariable("id") String id) {
+        return repository.findReviewsByMovieId(id);
     }
 
     // Find all reviews of a movie by its id, return those reviews (stars only)

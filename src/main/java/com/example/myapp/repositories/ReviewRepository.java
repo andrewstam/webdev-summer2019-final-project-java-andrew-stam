@@ -23,6 +23,10 @@ public interface ReviewRepository extends CrudRepository<Review, Long> {
     @Query(value = "select review_text from review where movie_id=:id", nativeQuery = true)
     public List<String> findWrittenReviewsByMovieId(@Param("id") String id);
 
+    // Use JPA to find all reviews of a movie by its id, return those reviews as strings
+    @Query(value = "select * from review where movie_id=:id", nativeQuery = true)
+    public List<String> findReviewsByMovieId(@Param("id") String id);
+
     // Use JPA to find all reviews of a movie by its id, return those reviews (stars only)
     @Query(value = "select stars from review where movie_id=:id", nativeQuery = true)
     public List<Integer> findStarReviewsByMovieId(@Param("id") String id);
