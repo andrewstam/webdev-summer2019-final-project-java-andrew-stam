@@ -19,12 +19,10 @@ public class Comment {
 
     private String text;
 
-    @JsonIgnore
-    @ManyToOne
     @JoinTable(name = "watchitem",
-            joinColumns={@JoinColumn(name="watch_item", referencedColumnName="id")}
+            joinColumns={@JoinColumn(name="watch_item_id", referencedColumnName="id")}
     )
-    private WatchItem watchItem;
+    private Long watchItemId;
 
     public Comment(Long id, Long userId, String text) {
         this.id = id;

@@ -13,27 +13,29 @@ public class WatchItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JoinTable(name = "movie_group",
+            joinColumns={@JoinColumn(name="group_id", referencedColumnName="id")}
+    )
+    private Long groupId;
+
     private String movieId;
 
     private String watchDate;
 
-    @JsonIgnore
-    @JoinTable(name = "comment",
-            joinColumns={@JoinColumn(name="comments", referencedColumnName="id")}
-    )
-    @OneToMany
-    @ElementCollection
-    private List<Comment> comments;
+//    A Comment keeps track of the WatchItem it belongs to
+//    @JsonIgnore
+//    @OneToMany
+//    @ElementCollection
+//    private List<Comment> comments;
 
     @JsonIgnore
     @ElementCollection
     private List<Long> attendingMemberIds;
 
-    public WatchItem(Long id, String movieId, String watchDate, List<Comment> comments, List<Long> attendingMemberIds) {
+    public WatchItem(Long id, String movieId, String watchDate, List<Long> attendingMemberIds) {
         this.id = id;
         this.movieId = movieId;
         this.watchDate = watchDate;
-        this.comments = comments;
         this.attendingMemberIds = attendingMemberIds;
     }
 
@@ -41,7 +43,6 @@ public class WatchItem {
         this.id = null;
         this.movieId = null;
         this.watchDate = null;
-        this.comments = null;
         this.attendingMemberIds = null;
     }
 
@@ -67,14 +68,6 @@ public class WatchItem {
 
     public void setWatchDate(String watchDate) {
         this.watchDate = watchDate;
-    }
-
-    public List<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
     }
 
     public List<Long> getAttendingMemberIds() {
