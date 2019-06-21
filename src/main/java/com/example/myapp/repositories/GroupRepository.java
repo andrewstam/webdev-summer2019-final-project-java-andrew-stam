@@ -93,6 +93,18 @@ public interface GroupRepository extends CrudRepository<Group, Long> {
     @Query(value = "select attending_member_ids from watch_item_attending_member_ids where watch_item_id=:wid", nativeQuery = true)
     public List<Long> findAttendingMembers(@Param("wid") Long wid);
 
+    // Use JPA to add a user to a groups's watch item's attending list
+    @Modifying
+    @Transactional
+    @Query(value = "insert into watch_item_attending_member_ids (watch_item_id, attending_member_ids) values (:wid, :uid)", nativeQuery = true)
+    public void addAttendingMember(@Param("wid") Long wid, @Param("uid") Long uid);
+
+    // Use JPA to remove a user from a groups's watch item's attending list
+    @Modifying
+    @Transactional
+    @Query(value = "delete from watch_item_attending_member_ids where watch_item_id=:wid and attending_member_ids=:uid", nativeQuery = true)
+    public void removeAttendingMember(@Param("wid") Long wid, @Param("uid") Long uid);
+
     // Use JPA to find a groups's watch item's comments by its id, return that list as strings
     @Query(value = "select * from comment where watch_item_id=:wid", nativeQuery = true)
     public List<String> findItemComments(@Param("wid") Long wid);
