@@ -31,7 +31,7 @@ public class GroupController {
     }
 
     // Find a groups's leader ID by the groups's ID
-    @GetMapping("/api/groups/{gid}")
+    @GetMapping("/api/groups/{gid}/leader")
     public Long findGroupLeaderId(@PathVariable("gid") Long id) {
         return repository.findGroupLeaderId(id);
     }
@@ -49,7 +49,7 @@ public class GroupController {
     }
 
     // Find all group member IDs for the group with the given ID
-    @GetMapping("/api/groups/{gid}")
+    @GetMapping("/api/groups/{gid}/members")
     public List<Long> findGroupMemberIds(@PathVariable("gid") Long groupId) {
         return repository.findGroupMemberIds(groupId);
     }
@@ -100,24 +100,6 @@ public class GroupController {
     @GetMapping("/api/groups/{gid}/dates")
     public List<String> findGroupDates(@PathVariable("gid") Long id) {
         return repository.findGroupDates(id);
-    }
-
-    // Find a groups's users by their id, return that list
-    @GetMapping("/api/groups/{gid}/users")
-    public List<Long> findGroupUsers(@PathVariable("gid") Long id) {
-        return repository.findGroupUsers(id);
-    }
-
-    // Add a user to a groups by their id
-    @PostMapping("/api/groups/{gid}")
-    public void addGroupUser(@RequestBody Long uid, @PathVariable("gid") Long gid) {
-        repository.addGroupUser(uid, gid);
-    }
-
-    // Remove a user from a groups by their id
-    @DeleteMapping("/api/groups/{gid}")
-    public void deleteGroupUser(@RequestBody Long uid, @PathVariable("gid") Long gid) {
-        repository.deleteGroupUser(uid, gid);
     }
 
     // Find a groups's watch item's attending members by its id, return that list
