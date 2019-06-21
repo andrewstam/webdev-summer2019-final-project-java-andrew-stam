@@ -25,6 +25,18 @@ public interface GroupRepository extends CrudRepository<Group, Long> {
     @Query(value = "select leader_id from movie_group where id=:id", nativeQuery = true)
     public Long findGroupLeaderId(@Param("id") Long id);
 
+    // Use JPA to create a group
+    @Modifying
+    @Transactional
+    @Query(value = "insert into movie_group (leader_id) values (:uid)", nativeQuery = true)
+    public void createGroup(@Param("uid") Long uid);
+
+    // Use JPA to remove a group
+    @Modifying
+    @Transactional
+    @Query(value = "delete from movie_group where group_id=:gid", nativeQuery = true)
+    public void deleteGroup(@Param("gid") Long gid);
+
     // Use JPA to find the group's members' IDs
     @Query(value = "select user_id from user_groups where groups_id=:id", nativeQuery = true)
     public List<Long> findGroupMemberIds(@Param("id") Long id);
@@ -106,6 +118,12 @@ public interface GroupRepository extends CrudRepository<Group, Long> {
     @Transactional
     @Query(value = "delete from comment where user_id=:uid and watch_item_id=:wid", nativeQuery = true)
     public void deleteItemComment(@Param("uid") Long uid, @Param("wid") Long wid);
+
+    // Use JPA to update a comment of an item by their ids
+    @Modifying
+    @Transactional
+    @Query(value = "update comment set text=:txt where user_id=:uid and watch_item_id=:wid", nativeQuery = true)
+    public void updateItemComment(@Param("txt") String text, @Param("uid") Long uid, @Param("wid") Long wid);
 
     // Use JPA to find a groups's watch item's comment text by its id, return that list
     @Query(value = "select text from comment where watch_item_id=:wid", nativeQuery = true)
