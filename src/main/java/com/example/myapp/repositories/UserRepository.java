@@ -43,6 +43,10 @@ public interface UserRepository extends CrudRepository<User, Long> {
     @Query(value = "select * from user_favorites where user_id=:id", nativeQuery = true)
     public List<String> findUserFavorites(@Param("id") Long id);
 
+    // Use JPA to find a user's groups by their id, return that list
+    @Query(value = "select group_id from user_groups where user_id=:id", nativeQuery = true)
+    public List<Long> findUserGroups(@Param("id") Long id);
+
     // Use JPA to add to a user's following by their id, the user to follow's id, and the array index
     @Modifying
     @Transactional
