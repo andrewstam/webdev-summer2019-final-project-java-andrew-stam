@@ -19,6 +19,8 @@ public class Group {
     )
     private Long leaderId;
 
+    private String name;
+
 //    Has ManyToMany relationship, stored in User.java
 //    @JsonIgnore
 //    @ManyToMany
@@ -31,14 +33,16 @@ public class Group {
 //    @ElementCollection
 //    private List<WatchItem> watchItems;
 
-    public Group(Long id, Long leaderId) {
+    public Group(Long id, Long leaderId, String name) {
         this.id = id;
         this.leaderId = leaderId;
+        this.name = name;
     }
 
     public Group() {
         this.id = null;
         this.leaderId = null;
+        this.name = null;
     }
 
     public Long getGroupId() {
@@ -55,5 +59,21 @@ public class Group {
 
     public void setLeaderId(Long leaderId) {
         this.leaderId = leaderId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

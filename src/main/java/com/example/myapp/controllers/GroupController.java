@@ -48,6 +48,14 @@ public class GroupController {
         repository.deleteGroup(gid);
     }
 
+    // Change the group's name, if the group exists
+    @PostMapping("/api/groups/{gid}")
+    public void editGroupName(@PathVariable("gid") Long gid, @RequestBody String name) {
+        if (repository.findGroupById(gid) != null) {
+            repository.editGroupName(gid, name);
+        }
+    }
+
     // Find all group member IDs for the group with the given ID
     @GetMapping("/api/groups/{gid}/members")
     public List<Long> findGroupMemberIds(@PathVariable("gid") Long groupId) {

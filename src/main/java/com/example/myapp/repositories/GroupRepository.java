@@ -41,6 +41,12 @@ public interface GroupRepository extends CrudRepository<Group, Long> {
     @Query(value = "select user_id from user_groups where groups_id=:id", nativeQuery = true)
     public List<Long> findGroupMemberIds(@Param("id") Long id);
 
+    // Use JPA to update the group's name
+    @Modifying
+    @Transactional
+    @Query(value = "update movie_group set name=:name where id=:id", nativeQuery = true)
+    public void editGroupName(@Param("id") Long id, @Param("name") String name);
+
     // Use JPA to add a user to a group
     @Modifying
     @Transactional
