@@ -65,7 +65,7 @@ public class UserController {
     }
 
     // Add to a user's followers list by the user's ID
-    @PostMapping("/api/users/{uid}/followers")
+    @PutMapping("/api/users/{uid}/followers")
     public void addFollower(@PathVariable("uid") Long id, @RequestBody Long addId) {
         // If not a follower already
         if (!repository.findUserFollowers(id).contains(addId)) {
@@ -94,7 +94,7 @@ public class UserController {
     }
 
     // Add to a user's following list by the user's ID
-    @PostMapping("/api/users/{uid}/following")
+    @PutMapping("/api/users/{uid}/following")
     public void addFollowing(@PathVariable("uid") Long id, @RequestBody Long addId) {
         // If not following already
         if (!repository.findUserFollowing(id).contains(addId)) {
@@ -118,7 +118,7 @@ public class UserController {
     }
 
     // Add to a user's favorites list by the user's ID
-    @PostMapping("/api/users/{uid}/favorites")
+    @PutMapping("/api/users/{uid}/favorites")
     public void addFavorite(@PathVariable("uid") Long id, @RequestBody String fav) {
         // Add to end of the list, never need double quotes
         if (fav.contains("\"")) {
@@ -155,7 +155,7 @@ public class UserController {
     }
 
     // Update all users
-    @PostMapping("/api/users")
+    @PutMapping("/api/users")
     public void updateUsers(@RequestBody List<User> allUsers) {
         // Reset database to only have the given users
         for (User u : repository.findAllUsers()) {
@@ -167,7 +167,7 @@ public class UserController {
     }
 
     // Update given user, return updated user - password never sent or modified
-    @PostMapping("/api/users/{uid}")
+    @PutMapping("/api/users/{uid}")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public User updateUser(@PathVariable("uid") Long id, @RequestBody User update) {
         User u = repository.findUserById(id);
@@ -176,7 +176,7 @@ public class UserController {
     }
 
     // Create a new user, return if success
-    @PutMapping("/api/users")
+    @PostMapping("/api/users")
     public boolean createUser(@RequestBody String[] credentials, HttpSession session) {
         // Convert string to enum
         RoleType role = RoleType.GroupMember;

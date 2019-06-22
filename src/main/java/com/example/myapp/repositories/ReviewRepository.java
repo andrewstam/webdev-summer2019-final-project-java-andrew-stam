@@ -76,6 +76,6 @@ public interface ReviewRepository extends CrudRepository<Review, Long> {
     // Use JPA to delete a review of a movie by a user by their ids
     @Modifying
     @Transactional
-    @Query(value = "delete from review where user_id=:uid and mid=:mid", nativeQuery = true)
+    @Query(value = "delete from review where user_id=:uid and movie_id=:mid", nativeQuery = true)
     public void deleteReview(@Param("uid") Long uid, @Param("mid") String mid);
 }
