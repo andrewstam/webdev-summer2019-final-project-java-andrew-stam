@@ -117,8 +117,13 @@ public class GroupController {
     }
 
     // Add a watch item
-    @PostMapping("/api/groups/{gid}/watch/{mid}")
+    @PutMapping("/api/groups/{gid}/watch/{mid}")
     public void addWatchItem(@PathVariable("gid") Long gid, @PathVariable("mid") String mid, @RequestBody String date) {
+        // Remove double quotes
+        if (date.contains("\"")) {
+            // Will always be at beginning and end
+            date = date.substring(1, date.length() - 1);
+        }
         repository.addWatchItem(gid, mid, date);
     }
 
