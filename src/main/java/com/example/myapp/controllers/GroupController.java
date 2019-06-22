@@ -2,7 +2,10 @@
 package com.example.myapp.controllers;
 
 import com.example.myapp.models.Group;
+import com.example.myapp.models.RoleType;
+import com.example.myapp.models.User;
 import com.example.myapp.repositories.GroupRepository;
+import com.example.myapp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +18,10 @@ public class GroupController {
     // Get data from the database
     @Autowired
     private GroupRepository repository;
+
+    // Get user data from the database
+    @Autowired
+    private UserRepository userRepository;
 
     // Find all users stored
     @GetMapping("/api/groups")
@@ -76,12 +83,25 @@ public class GroupController {
         return repository.findGroupMemberIds(groupId);
     }
 
-    // Add a user to the given group
+    // Add a user to the given group, validate that user is of Member type (unless the group's leader)
+    // Returns if success
     @PostMapping("/api/groups/{gid}/add")
-    public void addUser(@PathVariable("gid") Long gid, @RequestBody Long uid) {
-        if (repository.findGroupById(gid) != null) {
-            repository.addUser(gid, uid);
+    public boolean addUser(@PathVariable("gid") Long gid, @RequestBody Long uid) {
+        if (gid == null || uid == null) {
+            return false;
         }
+        Group group = repository.findGroupById(gid);
+        User user = userRepository.findUserById(uid);
+        // Verify group exists and user isn't already in the group
+        if (group != null && user != null && !repository.findGroupMemberIds(gid).contains(uid)) {
+            // Either of type member or are the group's leader
+            if (user.getRole() != RoleType.GroupLeader
+                || group.getLeaderId().equals(uid)) {
+                repository.addUser(gid, uid);
+                return true;
+            }
+        }
+        return false;
     }
 
     // Remove a user from a group
