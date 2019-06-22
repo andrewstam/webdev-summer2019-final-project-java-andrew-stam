@@ -1,9 +1,7 @@
 // Created by Andrew Stam
 package com.example.myapp.controllers;
 
-import com.example.myapp.models.Comment;
 import com.example.myapp.models.Group;
-import com.example.myapp.models.WatchItem;
 import com.example.myapp.repositories.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -37,9 +35,20 @@ public class GroupController {
     }
 
     // Create a group for the given leader ID
-    @PutMapping("/api/groups")
-    public void createGroup(@RequestBody Long uid) {
-        repository.createGroup(uid);
+    @PutMapping("/api/groups/{uid}")
+    public void createGroup(@PathVariable("uid") Long uid, @RequestBody String name) {
+        // Remove double quotes
+        if (name.contains("\"")) {
+            // Will always be at beginning and end
+            name = name.substring(1, name.length() - 1);
+        }
+        repository.createGroup(uid, name);
+        // Add the leader to the user_groups table too, don't have group id yet so search for it
+        for (Group g : repository.findAllGroups()) {
+            if (g.getLeaderId().equals(uid) && g.getName().equals(name)) {
+                repository.addUser(g.getId(), uid);
+            }
+        }
     }
 
     // Delete a group by its id
@@ -51,6 +60,11 @@ public class GroupController {
     // Change the group's name, if the group exists
     @PostMapping("/api/groups/{gid}")
     public void editGroupName(@PathVariable("gid") Long gid, @RequestBody String name) {
+        // Remove double quotes
+        if (name.contains("\"")) {
+            // Will always be at beginning and end
+            name = name.substring(1, name.length() - 1);
+        }
         if (repository.findGroupById(gid) != null) {
             repository.editGroupName(gid, name);
         }
@@ -63,9 +77,11 @@ public class GroupController {
     }
 
     // Add a user to the given group
-    @PutMapping("/api/groups/{gid}")
+    @PostMapping("/api/groups/{gid}/add")
     public void addUser(@PathVariable("gid") Long gid, @RequestBody Long uid) {
-        repository.addUser(gid, uid);
+        if (repository.findGroupById(gid) != null) {
+            repository.addUser(gid, uid);
+        }
     }
 
     // Remove a user from a group
@@ -117,7 +133,7 @@ public class GroupController {
     }
 
     // Add a user to a groups's watch item's attending members list
-    @PostMapping("/api/groups/{wid}/attending")
+    @PutMapping("/api/groups/{wid}/attending")
     public void addAttendingMember(@PathVariable("wid") Long wid, @RequestBody Long userId) {
         repository.addAttendingMember(wid, userId);
     }
@@ -134,16 +150,22 @@ public class GroupController {
         return repository.findItemComments(wid);
     }
 
-    // Add a comment to groups's watch item
+    // Add a comment to groups's watch item, return the new list
     @PutMapping("/api/groups/{wid}/comment/{uid}")
-    public void addItemComment(@RequestBody String text, @PathVariable("uid") Long uid, @PathVariable("wid") Long wid) {
+    public List<String> addItemComment(@RequestBody String text, @PathVariable("uid") Long uid, @PathVariable("wid") Long wid) {
+        // Remove double quotes
+        if (text.contains("\"")) {
+            // Will always be at beginning and end
+            text = text.substring(1, text.length() - 1);
+        }
         repository.addItemComment(text, uid, wid);
+        return repository.findItemComments(wid);
     }
 
     // Delete a comment of an item by their ids
     @DeleteMapping("/api/groups/{wid}/comment/{uid}")
-    public void deleteItemComment(@PathVariable("uid") Long uid, @PathVariable("wid") Long wid) {
-        repository.deleteItemComment(uid, wid);
+    public void deleteItemComment(@PathVariable("uid") Long uid, @PathVariable("wid") Long wid, @RequestBody Long cid) {
+        repository.deleteItemComment(uid, wid, cid);
     }
 
     // Update a comment of an item by their ids

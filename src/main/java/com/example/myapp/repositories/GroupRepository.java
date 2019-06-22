@@ -28,8 +28,8 @@ public interface GroupRepository extends CrudRepository<Group, Long> {
     // Use JPA to create a group
     @Modifying
     @Transactional
-    @Query(value = "insert into movie_group (leader_id) values (:uid)", nativeQuery = true)
-    public void createGroup(@Param("uid") Long uid);
+    @Query(value = "insert into movie_group (leader_id, name) values (:uid, :name)", nativeQuery = true)
+    public void createGroup(@Param("uid") Long uid, @Param("name") String name);
 
     // Use JPA to remove a group
     @Modifying
@@ -50,13 +50,13 @@ public interface GroupRepository extends CrudRepository<Group, Long> {
     // Use JPA to add a user to a group
     @Modifying
     @Transactional
-    @Query(value = "insert into user_groups (group_id, user_id) values (:gid, :uid)", nativeQuery = true)
+    @Query(value = "insert into user_groups (groups_id, user_id) values (:gid, :uid)", nativeQuery = true)
     public void addUser(@Param("gid") Long gid, @Param("uid") Long uid);
 
     // Use JPA to remove a user from a group
     @Modifying
     @Transactional
-    @Query(value = "delete from user_groups where group_id=:gid and user_id=:uid", nativeQuery = true)
+    @Query(value = "delete from user_groups where groups_id=:gid and user_id=:uid", nativeQuery = true)
     public void deleteUser(@Param("gid") Long gid, @Param("uid") Long uid);
 
     // Use JPA to find the group's WatchItems
@@ -118,8 +118,8 @@ public interface GroupRepository extends CrudRepository<Group, Long> {
     // Use JPA to delete a comment of an item by their ids
     @Modifying
     @Transactional
-    @Query(value = "delete from comment where user_id=:uid and watch_item_id=:wid", nativeQuery = true)
-    public void deleteItemComment(@Param("uid") Long uid, @Param("wid") Long wid);
+    @Query(value = "delete from comment where user_id=:uid and watch_item_id=:wid and id=:cid", nativeQuery = true)
+    public void deleteItemComment(@Param("uid") Long uid, @Param("wid") Long wid, @Param("cid") Long cid);
 
     // Use JPA to update a comment of an item by their ids
     @Modifying
