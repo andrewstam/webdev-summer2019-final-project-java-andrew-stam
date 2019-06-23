@@ -111,6 +111,15 @@ public class ReviewController {
     // Add a review of a movie by a user by their ids, storing the text and star rating. Returns if added
     @PostMapping("/api/reviews/{mid}/{uid}/{stars}")
     public boolean createReview(@PathVariable("uid") Long uid, @PathVariable("mid") String mid, @RequestBody String text, @PathVariable("stars") Integer stars) {
+        // Remove any quotes, always at beginning and end
+        if (mid.contains("\"")) {
+            // Will always be at beginning and end
+            mid = mid.substring(1, mid.length() - 1);
+        }
+        if (text.contains("\"")) {
+            // Will always be at beginning and end
+            text = text.substring(1, text.length() - 1);
+        }
         // If this user doesn't have a review for the movie already
         if (!repository.findUserMovieReviews(uid).contains(mid)) {
             repository.createReview(uid, mid, text, stars);
@@ -131,9 +140,6 @@ public class ReviewController {
         // If this user has a review for the movie already
         if (repository.findUserMovieReviews(uid).contains(mid)) {
             repository.updateStars(uid, mid, stars);
-        } else {
-            // Create review, one doesn't exist
-            repository.createReview(uid, mid, null, stars);
         }
     }
 
@@ -154,9 +160,6 @@ public class ReviewController {
         // If this user has a review for the movie already
         if (repository.findUserMovieReviews(uid).contains(mid)) {
             repository.updateText(uid, mid, text);
-        } else {
-            // Create review, one doesn't exist
-            repository.createReview(uid, mid, text, 0);
         }
     }
 
