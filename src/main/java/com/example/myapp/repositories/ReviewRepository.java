@@ -16,7 +16,7 @@ public interface ReviewRepository extends CrudRepository<Review, Long> {
     public List<Review> findAllReviews();
 
     // Use JPA to find a review by its id, return that review
-    @Query(value = "select * from review where review_id=:id limit 1", nativeQuery = true)
+    @Query(value = "select * from review where review_id=:id", nativeQuery = true)
     public Review findReviewById(@Param("id") Long id);
 
     // Use JPA to find all reviews of a movie by its id, return those reviews (text only)
@@ -44,11 +44,11 @@ public interface ReviewRepository extends CrudRepository<Review, Long> {
     public List<Long> findReviewIdsByUserId(@Param("id") Long id);
 
     // Use JPA to find the review of a movie by a user by their ids, return that review (text only)
-    @Query(value = "select review_text from review where user_id=:uid and movie_id=:mid", nativeQuery = true)
+    @Query(value = "select review_text from review where user_id=:uid and movie_id=:mid limit 1", nativeQuery = true)
     public String findWrittenReviewForMovieByUserId(@Param("uid") Long uid, @Param("mid") String mid);
 
     // Use JPA to find the review of a movie by a user by their ids, return that review (text only)
-    @Query(value = "select stars from review where user_id=:uid and movie_id=:mid", nativeQuery = true)
+    @Query(value = "select stars from review where user_id=:uid and movie_id=:mid limit 1", nativeQuery = true)
     public Integer findStarsForMovieByUserId(@Param("uid") Long uid, @Param("mid") String mid);
 
     // Use JPA to find the list of movies a user has written reviews for
